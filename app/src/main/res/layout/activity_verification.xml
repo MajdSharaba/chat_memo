@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".VerificationActivity">
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_title"-->
-<!--        android:layout_marginLeft="25dp"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="@string/app_name"-->
-<!--        android:textSize="50sp"-->
-<!--        android:fontFamily="@font/indigo_daisy"-->
-<!--        android:layout_marginBottom="10dp"-->
-<!--        android:layout_above="@id/tv_subtitle"/>-->
+    <!--    <TextView-->
+    <!--        android:id="@+id/tv_title"-->
+    <!--        android:layout_marginLeft="25dp"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/app_name"-->
+    <!--        android:textSize="50sp"-->
+    <!--        android:fontFamily="@font/indigo_daisy"-->
+    <!--        android:layout_marginBottom="10dp"-->
+    <!--        android:layout_above="@id/tv_subtitle"/>-->
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="150dp"
@@ -35,63 +35,44 @@
         tools:ignore="VectorDrawableCompat" />
 
 
-<!--    <TextView-->
-<!--        android:id="@+id/tv_subtitle"-->
-<!--        android:layout_marginLeft="25dp"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--         android:layout_below="@+id/imageView"-->
-<!--        android:text="Verification"-->
-<!--        android:textSize="17sp"-->
-<!--        android:fontFamily="@font/roboto_regular"-->
-<!--        android:layout_marginBottom="50dp"-->
-<!--        android:layout_above="@id/et_password"/>-->
 
-<!--    <EditText-->
-<!--        android:id="@+id/et_email"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:hint="email"-->
-<!--        android:layout_marginLeft="20dp"-->
-<!--        android:layout_marginRight="20dp"-->
-<!--        android:padding="15dp"-->
-<!--        android:inputType="textEmailAddress"-->
-<!--        android:fontFamily="@font/roboto_regular"-->
-<!--        android:layout_above="@id/et_password"-->
-<!--        android:background="@drawable/et_custom"-->
-<!--        android:textSize="15sp" />-->
 
     <EditText
-        android:id="@+id/et_password"
+        android:id="@+id/et_verifiction"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="+964"
+        android:hint="verifiction code"
         android:layout_below="@+id/imageView"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="50dp"
         android:padding="15dp"
         android:fontFamily="@font/roboto_regular"
-        android:inputType="phone"
+        android:inputType="number"
         android:layout_centerInParent="true"
         android:background="@drawable/et_custom"
         android:textSize="15sp" />
 
     <Button
-        android:id="@+id/btn_send_code"
+        android:id="@+id/btn_send"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/et_password"
+        android:layout_below="@id/et_verifiction"
         android:background="@drawable/btn_custom"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="50dp"
-
         android:fontFamily="@font/roboto_regular"
         android:textColor="@android:color/white"
-        android:text="send code"/>
+        android:text="verifiction "/>
 
-
+    <!--    <ImageView-->
+    <!--        android:layout_width="30dp"-->
+    <!--        android:layout_height="30dp"-->
+    <!--        android:src="@drawable/ic_arrow_right"-->
+    <!--        android:layout_above="@id/swipeRight"-->
+    <!--        android:layout_centerHorizontal="true"/>-->
 
 
 
