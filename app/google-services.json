@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "234926456780",
+    "project_id": "androidchat-3f5b7",
+    "storage_bucket": "androidchat-3f5b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234926456780:android:4894e926e430fe692f2769",
+        "android_client_info": {
+          "package_name": "com.yawar.chatmemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234926456780-pbfkg0sik24910fcur08lkb5b4c3jin2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yawar.chatmemo",
+            "certificate_hash": "87f13dab3def255a124d63fd887e91a8bcd33530"
+          }
+        },
+        {
+          "client_id": "234926456780-902b37jeu44q7r128q7b3s3dapjpdavg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALS1jSJWnTgHg4fsjmMJLu-trRPL1I-sI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234926456780-902b37jeu44q7r128q7b3s3dapjpdavg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

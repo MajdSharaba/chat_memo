@@ -3,10 +3,8 @@
     <item
 
         android:id="@+id/chat"
-        android:iconTint="@color/white"
-        android:iconTintMode="src_atop"
         android:title= "@string/tab_text_1"
-        android:icon="@drawable/ic_person"/>
+        android:icon="@drawable/ic_message"/>
     <item
         android:id="@+id/addchat"
         android:title="@string/tab_text_2"

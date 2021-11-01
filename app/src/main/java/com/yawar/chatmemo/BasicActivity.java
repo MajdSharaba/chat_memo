@@ -5,20 +5,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yawar.chatmemo.fragment.BlankFragment;
 import com.yawar.chatmemo.fragment.ChatRoomFragment;
 
 public class BasicActivity extends AppCompatActivity {
+
 //    RecyclerView recyclerView;
 //    List<ChatRoomModel> data;
 //    ChatRoomAdapter itemAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.activity_basic);
         ChatRoomFragment chatRoomFrafment = new ChatRoomFragment();
 

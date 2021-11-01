@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".LoginActivity">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
 <!--    <TextView-->
 <!--        android:id="@+id/tv_title"-->
@@ -92,8 +95,41 @@
         android:textColor="@android:color/white"
         android:text="send code"/>
 
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/orText"
+            android:layout_below="@+id/btn_send_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OR"
+            android:fontFamily="@font/roboto_regular"
+            android:textSize="15sp"
+            android:textColor="@color/green_500">
+
+        </TextView>
+
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orText"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="OR"
+            android:textSize="36sp"
+            app:buttonSize="icon_only">
+
+        </com.google.android.gms.common.SignInButton>
+
+
+    </RelativeLayout>
 
 
 
 
-</RelativeLayout>
+
+</ScrollView>

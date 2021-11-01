@@ -1,5 +1,6 @@
 package com.yawar.chatmemo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,9 +10,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.yawar.chatmemo.MainActivity;
 import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.adapter.ChatRoomAdapter;
+import com.yawar.chatmemo.interfac.ListItemClickListener;
 import com.yawar.chatmemo.model.ChatRoomModel;
 
 import java.util.ArrayList;
@@ -84,7 +88,13 @@ public class ChatRoomFragment extends Fragment {
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerfragment);
-        itemAdapter = new ChatRoomAdapter(data,getContext());
+        ListItemClickListener listener = (view1, position) -> {
+            Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(view.getContext(), MainActivity.class);
+
+            startActivity(intent);
+        };
+        itemAdapter = new ChatRoomAdapter(data , getContext(),listener);
 
 
 //        recyclerView.setHasFixedSize(true);

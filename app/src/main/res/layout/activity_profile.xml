@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
-<FrameLayout
+
+    <FrameLayout
     android:layout_width="match_parent"
-    android:layout_weight="1.5"
+    android:layout_weight="2"
     android:layout_height="0dp">
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_gravity="center_horizontal"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="vertical"
         android:padding="36dp">
         <TextView
@@ -164,5 +170,21 @@
             android:textColor="@android:color/white"
             android:text="Update"
             android:textSize="15sp" />
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_margin="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/btn_custom"
+            android:layout_marginTop="70dp"
+            android:fontFamily="@font/roboto_regular"
+            android:textColor="@android:color/white"
+            android:text="LogOut"
+            android:textSize="15sp" />
+
     </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
