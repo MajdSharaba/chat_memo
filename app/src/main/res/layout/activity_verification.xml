@@ -12,9 +12,8 @@
         android:id="@+id/et_verifiction"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:hint="verifiction code"
+        android:hint="@string/verifiction_code"
         android:layout_below="@+id/imageView"
-
         android:layout_marginTop="50dp"
         android:padding="15dp"
         android:layout_marginLeft="20dp"
@@ -37,7 +36,7 @@
         android:layout_marginTop="50dp"
         android:fontFamily="@font/roboto_regular"
         android:textColor="@android:color/white"
-        android:text="verifiction "/>
+        android:text="@string/verifiction"/>
 
     <!--    <ImageView-->
     <!--        android:layout_width="30dp"-->

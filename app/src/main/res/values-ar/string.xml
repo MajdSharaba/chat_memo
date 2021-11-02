@@ -1,24 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Memo</string>
     <string name="company_name">yawar</string>
     <string name="powered_by">powered By</string>
-    <string name="send_code">send code</string>
-    <string name="or">OR</string>
-    <string name="welcome">Welcome!!</string>
-    <string name="status">Status</string>
-    <string name="number">Number</string>
-    <string name="update">Update</string>
-    <string name="logout">LogOut</string>
-    <string name="active">active</string>
-    <string name="verifiction_code">verifiction code</string>
-    <string name="verifiction">verifiction</string>
-    <string name="type_message">type message</string>
-    <string name="light_mode_selected">Light Mode Selected</string>
-    <string name="dark_mode_selected"> Dark Mode Selected</string>
+    <string name="send_code">ارسل رمز</string>
+    <string name="or">أو</string>
+    <string name="welcome">مرحبا!!</string>
+    <string name="status">الحالة</string>
+    <string name="number">رقم الهاتف</string>
+    <string name="update">تحديث</string>
+    <string name="logout">تسجيل الخروج</string>
+    <string name="active">نشط</string>
+    <string name="verifiction_code">رمز التحقق</string>
+    <string name="verifiction">تحقق</string>
+    <string name="type_message">اكتب رسالة</string>
+    <string name="light_mode_selected">فاتح</string>
+    <string name="dark_mode_selected"> داكن</string>
     <string name="title_activity_chat_room">ChatRoomActivity</string>
-    <string name="tab_text_1">Chats</string>
-    <string name="tab_text_2">Add</string>
-    <string name="tab_text_3">Calls</string>
+    <string name="tab_text_1">المحادثات</string>
+    <string name="tab_text_2">اضافة</string>
+    <string name="tab_text_3">اتصال</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>
@@ -37,8 +38,8 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="ui">UI</string>
-    <string name="dark_mode">Dark Mode</string>
+    <string name="ui">الواجهات</string>
+    <string name="dark_mode">داكن</string>
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
     <string name="title_activity_settings2">SettingsActivity2</string>
 </resources>

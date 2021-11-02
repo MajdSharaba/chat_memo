@@ -1,33 +1,24 @@
 package com.yawar.chatmemo;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.yawar.chatmemo.adapter.ChatAdapter;
 import com.yawar.chatmemo.model.ChatMessage;
-import com.yawar.chatmemo.model.ChatRoomModel;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class ConversationActivity extends AppCompatActivity {
     private EditText messageET;
     private ListView messagesContainer;
     private ImageButton sendBtn;
@@ -39,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_conversation);
         initControls();
       //  List<ChatRoomModel> data = fill_with_data();
 
@@ -126,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
         chatHistory.add(msg1);
 
-        adapter = new ChatAdapter(MainActivity.this, new ArrayList<ChatMessage>());
+        adapter = new ChatAdapter(ConversationActivity.this, new ArrayList<ChatMessage>());
         messagesContainer.setAdapter(adapter);
 
         for(int i=0; i<chatHistory.size(); i++) {

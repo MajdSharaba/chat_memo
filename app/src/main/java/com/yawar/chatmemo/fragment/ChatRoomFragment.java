@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.yawar.chatmemo.MainActivity;
+import com.yawar.chatmemo.ConversationActivity;
 import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.adapter.ChatRoomAdapter;
 import com.yawar.chatmemo.interfac.ListItemClickListener;
@@ -90,7 +90,7 @@ public class ChatRoomFragment extends Fragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerfragment);
         ListItemClickListener listener = (view1, position) -> {
             Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(view.getContext(), MainActivity.class);
+            Intent intent = new Intent(view.getContext(), ConversationActivity.class);
 
             startActivity(intent);
         };

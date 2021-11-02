@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
     android:orientation="vertical"
     >
     <LinearLayout
@@ -29,10 +30,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:text="Welcome!"
+            android:text="@string/welcome"
             android:textSize="25sp"
             android:layout_gravity="center"
-            android:textColor="@color/white">
+            android:textColor="@color/textColor">
 
         </TextView>
         <EditText
@@ -43,9 +44,8 @@
             android:layout_gravity="center"
             android:layout_marginBottom="20dp"
             android:background="@null"
-            android:hint="Majd Sharabah"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
+            android:textColor="@color/textColor"
+            android:textColorHint="@color/textColor"
             android:textSize="30sp"
              />
 
@@ -62,7 +62,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="50dp"
             android:src="@mipmap/ic_launcher"
-            app:civ_border_color="@color/black"
+            app:civ_border_color="@color/textColor"
             app:civ_border_width="2dp" />
 
 
@@ -70,41 +70,6 @@
 
 </FrameLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_marginLeft="1dp"-->
-<!--        android:layout_marginRight="1dp"-->
-<!--        android:layout_weight="1"-->
-<!--        android:background="@drawable/shape_blnt"-->
-<!--        android:gravity="center"-->
-<!--        android:orientation="vertical">-->
-
-
-<!--        <de.hdodenhof.circleimageview.CircleImageView-->
-<!--            android:id="@+id/image"-->
-<!--            android:layout_width="150dp"-->
-<!--            android:layout_height="150dp"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:src="@mipmap/ic_launcher"-->
-<!--            app:civ_border_color="@color/black"-->
-<!--            app:civ_border_width="2dp" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/username"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginBottom="10dp"-->
-<!--            android:background="@null"-->
-<!--            android:hint="Username"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textColorHint="#000000"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textStyle="bold" />-->
-<!--    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -116,9 +81,9 @@
         <TextView
             android:id="@+id/textstatue"
             android:layout_width="wrap_content"
-            android:text="status"
+            android:text="@string/status"
             android:textSize="20dp"
-            android:textColorHint="#000000"
+            android:textColor="@color/textColor"
             android:textStyle="bold"
             android:textAppearance="@color/green_200"
             android:layout_height="wrap_content"
@@ -140,8 +105,8 @@
             android:textAppearance="@color/green_200"
             android:id="@+id/textnumber"
             android:layout_width="wrap_content"
-            android:text="number"
-            android:textColorHint="#000000"
+            android:text="@string/number"
+            android:textColor="@color/textColor"
             android:textStyle="bold"
             android:textSize="20dp"
             android:layout_height="wrap_content"
@@ -168,7 +133,7 @@
             android:layout_marginTop="70dp"
             android:fontFamily="@font/roboto_regular"
             android:textColor="@android:color/white"
-            android:text="Update"
+            android:text="@string/update"
             android:textSize="15sp" />
 
         <Button
@@ -181,7 +146,7 @@
             android:layout_marginTop="70dp"
             android:fontFamily="@font/roboto_regular"
             android:textColor="@android:color/white"
-            android:text="LogOut"
+            android:text="@string/logout"
             android:textSize="15sp" />
 
     </LinearLayout>

@@ -2,17 +2,25 @@ package com.yawar.chatmemo;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yawar.chatmemo.fragment.BlankFragment;
 import com.yawar.chatmemo.fragment.ChatRoomFragment;
+import com.yawar.chatmemo.utils.ContextUtils;
+
+import java.util.Locale;
 
 public class BasicActivity extends AppCompatActivity {
 
@@ -25,6 +33,17 @@ public class BasicActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        final String[] darkModeValues = getResources().getStringArray(R.array.dark_mode_values);
+        // The apps theme is decided depending upon the saved preferences on app startup
+        String pref = PreferenceManager.getDefaultSharedPreferences(this)
+                .getString(getString(R.string.dark_mode), getString(R.string.dark_mode_def_value));
+        // Comparing to see which preference is selected and applying those theme settings
+        if (pref.equals(darkModeValues[0]))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        if (pref.equals(darkModeValues[1]))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+
 
 
         setContentView(R.layout.activity_basic);
@@ -42,14 +61,10 @@ public class BasicActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.addchat:
-                        openFragment(new BlankFragment());
-                        return true;
 
                     case R.id.calls:
                         openFragment(new BlankFragment());
                         return true;
-
-
 
 
                 }
@@ -58,6 +73,21 @@ public class BasicActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        } else return super.onOptionsItemSelected(item);
+    }
+
     void openFragment ( Fragment fragment){
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.flFragment, fragment);
@@ -66,7 +96,12 @@ public class BasicActivity extends AppCompatActivity {
 
     }
 
-
+//    @Override
+//    protected void attachBaseContext(Context newBase) {
+//        Locale localeToSwitchTo = new Locale("ar");
+//        ContextWrapper localeUpdatedContext = ContextUtils.updateLocale(newBase, localeToSwitchTo);
+//        super.attachBaseContext(localeUpdatedContext);
+//    }
 
 
 //        data = fill_with_data();
