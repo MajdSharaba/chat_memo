@@ -1,32 +1,43 @@
 package com.yawar.chatmemo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yawar.chatmemo.LoginActivity;
+import com.yawar.chatmemo.ProfileActivity;
 import com.yawar.chatmemo.R;
+import com.yawar.chatmemo.UserDetailsActivity;
 import com.yawar.chatmemo.interfac.ListItemClickListener;
 import com.yawar.chatmemo.model.ChatRoomModel;
 
+import java.util.ArrayList;
 import java.util.Collections;
         import java.util.List;
+import java.util.Locale;
 
 public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_Holder> {
     final private ListItemClickListener mOnClickListener;
 
     List<ChatRoomModel> list = Collections.emptyList();
+    List<ChatRoomModel> listsearch = new ArrayList<ChatRoomModel>();
+    List<ChatRoomModel> listsearch2= new ArrayList<ChatRoomModel>();
+
     Context context;
 
     public ChatRoomAdapter(List<ChatRoomModel> data, Context context,  ListItemClickListener mOnClickListener) {
         this.list = data;
         this.context = context;
         this.mOnClickListener = mOnClickListener;
+        this.listsearch2.addAll(list);
 
     }
 
@@ -45,6 +56,14 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         holder.name.setText(list.get(position).name);
         holder.imageView.setImageResource(list.get(position).imageId);
+        holder.imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
+                view.getContext().startActivity(intent);
+                Toast.makeText(view.getContext(),"Movie Name clicked",Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -52,6 +71,29 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
     public int getItemCount() {
         return list.size();
     }
+
+    public void filter(String charText) {
+        System.out.println(charText+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+        charText = charText.toLowerCase(Locale.getDefault());
+            listsearch.clear();
+        if (charText.length() == 0) {
+            System.out.println(charText+"MMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+
+            listsearch.addAll(listsearch2);
+        } else {
+            System.out.println(charText+"MMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+            for (ChatRoomModel wp : listsearch2) {
+                if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    listsearch.add(wp);
+                }
+            }
+        }
+        System.out.println(charText+"LLLLLLLLLLLLLLLLLLLLL");
+        list.clear();
+        list.addAll(listsearch);
+        notifyDataSetChanged();
+    }
+
 
  class View_Holder extends RecyclerView.ViewHolder implements View.OnClickListener{
 

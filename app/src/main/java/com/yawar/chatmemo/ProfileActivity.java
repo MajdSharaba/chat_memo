@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -20,8 +21,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.yawar.chatmemo.Api.AuthApi;
+import com.yawar.chatmemo.fragment.BlankFragment;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private ImageView image;
@@ -52,7 +55,7 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
         });
         editText = findViewById(R.id.username);
         editText.setHint(name);
-        logOutBtn = findViewById(R.id.btn_logout);
+//        logOutBtn = findViewById(R.id.btn_logout);
         gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -61,22 +64,52 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 .enableAutoManage(this,this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
                 .build();
-        logOutBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        logOutBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                FirebaseAuth.getInstance().signOut();
+//                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
+//                        new ResultCallback<Status>() {
+//                            @Override
+//                            public void onResult(Status status) {
+//                                if (status.isSuccess()){
+//                                    gotoLoginActivity();
+//                                }else{
+//                                    Toast.makeText(getApplicationContext(),"Session not close",Toast.LENGTH_LONG).show();
+//                                }
+//                            }
+//                        });
+//            }
+//        });
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.addchat);
+//        openFragment(new ChatRoomFragment());
 
-                FirebaseAuth.getInstance().signOut();
-                Auth.GoogleSignInApi.signOut(googleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status status) {
-                                if (status.isSuccess()){
-                                    gotoLoginActivity();
-                                }else{
-                                    Toast.makeText(getApplicationContext(),"Session not close",Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+
+                    case R.id.chat:
+                        Intent intent = new Intent(ProfileActivity.this, BasicActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+
+//                        openFragment(new ChatRoomFragment());
+                        return true;
+
+                    case R.id.addchat:
+                        return  true;
+
+                    case R.id.calls:
+//                        openFragment(new BlankFragment());
+                        return true;
+
+
+                }
+
+                return false;
             }
         });
     }

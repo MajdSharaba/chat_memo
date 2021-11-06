@@ -53,9 +53,15 @@
                 android:textColor="@color/textColor"
                 android:layout_marginLeft="10dp"
                 />
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_con"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <RelativeLayout
         android:id="@+id/container"

@@ -2,16 +2,24 @@
 
     <PreferenceCategory app:title="@string/ui">
 
-        <ListPreference
+  <ListPreference
             app:defaultValue="@string/dark_mode_def_value"
             app:entries="@array/dark_mode_entries"
             app:entryValues="@array/dark_mode_values"
             app:key="@string/dark_mode"
             app:title="@string/dark_mode"
             app:useSimpleSummaryProvider="true" />
+    <ListPreference
+           app:defaultValue="en"
+           app:entries="@array/language_entries"
+           app:entryValues="@array/language_values"
+           app:key="language"
+           app:title="@string/reply_title"
+           app:useSimpleSummaryProvider="true" />
 
-    </PreferenceCategory>
-<!--    <PreferenceCategory app:title="@string/messages_header">-->
+
+        </PreferenceCategory>
+    <!--    <PreferenceCategory app:title="@string/messages_header">-->
 
 <!--        <EditTextPreference-->
 <!--            app:key="signature"-->

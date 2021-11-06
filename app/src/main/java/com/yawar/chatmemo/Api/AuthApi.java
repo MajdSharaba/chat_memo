@@ -18,10 +18,10 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.yawar.chatmemo.BasicActivity;
-import com.yawar.chatmemo.Globle;
 import com.yawar.chatmemo.LoginActivity;
 import com.yawar.chatmemo.VerificationActivity;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -177,6 +177,22 @@ public class AuthApi {
 
         String name = prefs.getString("number","UserName");
         return  name;
+
+    }
+    public void setLocale(String lan){
+        SharedPreferences prefs = context.getSharedPreferences("language", MODE_PRIVATE);
+
+        prefs.edit().putString("lan",lan).commit();
+
+
+    }
+    public String getLocale(){
+
+        SharedPreferences prefs = context.getSharedPreferences("language", MODE_PRIVATE);
+
+
+        String lan = prefs.getString("lan","ar");
+        return lan;
 
     }
 }

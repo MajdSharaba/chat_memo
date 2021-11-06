@@ -1,6 +1,7 @@
 package com.yawar.chatmemo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -24,6 +25,8 @@ public class ConversationActivity extends AppCompatActivity {
     private ImageButton sendBtn;
     private ChatAdapter adapter;
     private ArrayList<ChatMessage> chatHistory;
+    SearchView searchView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,21 @@ public class ConversationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conversation);
         initControls();
+        searchView = findViewById(R.id.search_con);
+        CharSequence charSequence = searchView.getQuery();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return false;
+            }
+        });
       //  List<ChatRoomModel> data = fill_with_data();
 
 //        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);

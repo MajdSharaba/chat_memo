@@ -2,7 +2,11 @@ package com.yawar.chatmemo.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,12 +21,14 @@ import androidx.annotation.RequiresApi;
 
 import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.model.ChatMessage;
+import com.yawar.chatmemo.model.ChatRoomModel;
 
 import java.util.List;
+import java.util.Locale;
 
 public class ChatAdapter extends BaseAdapter {
 
-    private final List<ChatMessage> chatMessages;
+    public final List<ChatMessage> chatMessages;
     private Activity context;
 
     public ChatAdapter(Activity context, List<ChatMessage> chatMessages) {
@@ -129,6 +135,30 @@ public class ChatAdapter extends BaseAdapter {
             holder.txtInfo.setLayoutParams(layoutParams);
         }
     }
+    public void filter(String charText) {
+
+
+            for (ChatMessage wp : chatMessages) {
+
+
+                if (wp.getMessage().toString().toLowerCase(Locale.getDefault()).contains(charText)) {
+                    int index = wp.getMessage().toString().toLowerCase(Locale.getDefault()).indexOf(charText);
+
+                    Spannable WordtoSpan = new SpannableString(wp.getMessage().toString());
+                    WordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), index, index+charText.length(),
+                            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    wp.setMessage(WordtoSpan);
+
+
+
+                }
+            }
+
+
+        notifyDataSetChanged();
+    }
+
 
     private ViewHolder createViewHolder(View v) {
         ViewHolder holder = new ViewHolder();
