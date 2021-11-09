@@ -1,4 +1,4 @@
-package com.yawar.chatmemo;
+package com.yawar.chatmemo.views;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -12,15 +12,12 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
@@ -28,12 +25,11 @@ import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yawar.chatmemo.Api.AuthApi;
+import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.adapter.ChatRoomAdapter;
 import com.yawar.chatmemo.fragment.BlankFragment;
-import com.yawar.chatmemo.fragment.ChatRoomFragment;
 import com.yawar.chatmemo.interfac.ListItemClickListener;
 import com.yawar.chatmemo.model.ChatRoomModel;
-import com.yawar.chatmemo.utils.ContextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +50,7 @@ public class BasicActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        ////// for language
         authApi = new AuthApi(BasicActivity.this);
         String lan = authApi.getLocale();
  Locale locale = new Locale(lan);

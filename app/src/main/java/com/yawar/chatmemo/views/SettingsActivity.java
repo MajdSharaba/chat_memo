@@ -1,21 +1,17 @@
-package com.yawar.chatmemo;
+package com.yawar.chatmemo.views;
 
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -23,7 +19,8 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
 import com.yawar.chatmemo.Api.AuthApi;
-import com.yawar.chatmemo.utils.ContextUtils;
+import com.yawar.chatmemo.R;
+
 import java.util.Locale;
 
 
@@ -38,6 +35,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.settings_activity);
+        getSupportActionBar().setTitle(R.string.title_activity_settings2);
         authApi = new AuthApi(SettingsActivity.this);
 
         getSupportFragmentManager()

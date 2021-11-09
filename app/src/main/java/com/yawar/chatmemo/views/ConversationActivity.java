@@ -1,4 +1,4 @@
-package com.yawar.chatmemo;
+package com.yawar.chatmemo.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.adapter.ChatAdapter;
 import com.yawar.chatmemo.model.ChatMessage;
 

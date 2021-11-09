@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:background="@color/background_chat_page"
     android:layout_height="match_parent"
-    tools:context=".BasicActivity">
+    tools:context=".views.BasicActivity">
     <com.google.android.material.appbar.AppBarLayout
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

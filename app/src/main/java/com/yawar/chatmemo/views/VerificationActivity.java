@@ -1,8 +1,7 @@
-package com.yawar.chatmemo;
+package com.yawar.chatmemo.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.yawar.chatmemo.Api.AuthApi;
+import com.yawar.chatmemo.R;
 
 public class VerificationActivity extends AppCompatActivity {
     Button virvectbtn;

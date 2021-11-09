@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.yawar.chatmemo.ConversationActivity;
+import com.yawar.chatmemo.views.ConversationActivity;
 import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.adapter.ChatRoomAdapter;
 import com.yawar.chatmemo.interfac.ListItemClickListener;

@@ -17,15 +17,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.yawar.chatmemo.BasicActivity;
-import com.yawar.chatmemo.LoginActivity;
-import com.yawar.chatmemo.VerificationActivity;
+import com.yawar.chatmemo.views.BasicActivity;
+import com.yawar.chatmemo.views.VerificationActivity;
 
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
-import static androidx.core.content.ContextCompat.startActivity;
 
 public class AuthApi {
    private FirebaseAuth mAuth = FirebaseAuth.getInstance();

@@ -1,10 +1,12 @@
-package com.yawar.chatmemo;
+package com.yawar.chatmemo.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.WindowManager;
+
+import com.yawar.chatmemo.R;
 
 public class UserDetailsActivity extends AppCompatActivity {
     Toolbar toolbar;

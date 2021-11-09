@@ -15,18 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatMemo">
-        <activity android:name=".UserDetailsActivity"
-            android:theme="@style/AppTheme" >
+        <activity android:name=".views.LoginOtpInformation"></activity>
 
-        </activity>
         <activity
-            android:name=".SettingsActivity"
-           >
-
-        </activity>
-        <activity android:name=".BasicActivity"
-            android:theme="@style/AppTheme"
-            >
+            android:name=".views.UserDetailsActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".views.SettingsActivity" />
+        <activity
+            android:name=".views.BasicActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,19 +31,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SplashScreen"
+            android:name=".views.SplashScreen"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ProfileActivity"
+            android:name=".views.ProfileActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".VerificationActivity"
+            android:name=".views.VerificationActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ConversationActivity"
+            android:name=".views.ConversationActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".views.LoginActivity"
             android:theme="@style/AppTheme" />
     </application>
 

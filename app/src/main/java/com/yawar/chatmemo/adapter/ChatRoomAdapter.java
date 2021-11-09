@@ -10,12 +10,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.yawar.chatmemo.LoginActivity;
-import com.yawar.chatmemo.ProfileActivity;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.yawar.chatmemo.R;
-import com.yawar.chatmemo.UserDetailsActivity;
+import com.yawar.chatmemo.views.UserDetailsActivity;
 import com.yawar.chatmemo.interfac.ListItemClickListener;
 import com.yawar.chatmemo.model.ChatRoomModel;
 
@@ -59,9 +59,16 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
         holder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
-                view.getContext().startActivity(intent);
-                Toast.makeText(view.getContext(),"Movie Name clicked",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
+                View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_custom_layout, null);
+                ImageView photoView = mView.findViewById(R.id.imageView);
+                photoView.setImageResource(list.get(position).imageId);
+                mBuilder.setView(mView);
+                AlertDialog mDialog = mBuilder.create();
+                mDialog.show();
+//                Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
+//                view.getContext().startActivity(intent);
+//                Toast.makeText(view.getContext(),"Movie Name clicked",Toast.LENGTH_SHORT).show();
             }
         });
 
