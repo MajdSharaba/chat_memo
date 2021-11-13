@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context=".views.LoginActivity">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+<!--    <TextView-->
+<!--        android:id="@+id/tv_title"-->
+<!--        android:layout_marginLeft="25dp"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="@string/app_name"-->
+<!--        android:textSize="50sp"-->
+<!--        android:fontFamily="@font/indigo_daisy"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_above="@id/tv_subtitle"/>-->
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="300dp"
+        android:layout_marginStart="100dp"
+        android:layout_height="300dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false"
+        app:srcCompat="@mipmap/memologowithtextvertical"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        tools:ignore="VectorDrawableCompat" />
+
+
+    <EditText
+        android:id="@+id/et_password"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="+964"
+        android:layout_below="@+id/imageView"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:padding="15dp"
+        android:fontFamily="@font/roboto_regular"
+        android:inputType="phone"
+        android:layout_centerInParent="true"
+        android:background="@drawable/et_custom"
+        android:textSize="15sp" />
+
+    <Button
+        android:id="@+id/btn_send_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/et_password"
+        android:background="@drawable/btn_custom_green_back"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@android:color/white"
+        android:text="@string/send_code"/>
+
+        <TextView
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/orText"
+            android:layout_below="@+id/btn_send_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/or"
+            android:fontFamily="@font/roboto_regular"
+            android:textSize="15sp"
+            android:textColor="@color/green_500">
+
+        </TextView>
+
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/orText"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:textSize="36sp"
+            app:buttonSize="icon_only">
+
+        </com.google.android.gms.common.SignInButton>
+
+
+    </RelativeLayout>
+
+
+
+
+
+</ScrollView>

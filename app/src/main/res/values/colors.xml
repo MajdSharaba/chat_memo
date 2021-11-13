@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="green_200">#C5E1A5</color>
+    <color name="green_500">#249d25</color>
+    <color name="green_700">#117811
+    </color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="textColor">#FF000000</color>
+    <color name="backgroundColor">#FFFFFFFF</color>
+    <color name="background_send_message">#C5E1A5</color>
+    <color name="background_recive_message">#FFFFFFFF</color>
+    <color name="background_chat_page">#EEFFCC</color>
+
+
+
+
+</resources>

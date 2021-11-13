@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">Memo</string>
+    <string name="company_name">yawar</string>
+    <string name="powered_by">powered By</string>
+    <string name="send_code">send code</string>
+    <string name="or">OR</string>
+    <string name="welcome">Welcome!!</string>
+    <string name="status">Status</string>
+    <string name="number">Number</string>
+    <string name="update">Update</string>
+    <string name="logout">LogOut</string>
+    <string name="active">active</string>
+    <string name="verifiction_code">verifiction code</string>
+    <string name="verifiction">verifiction</string>
+    <string name="type_message">type message</string>
+    <string name="light_mode_selected">Light Mode Selected</string>
+    <string name="dark_mode_selected"> Dark Mode Selected</string>
+    <string name="title_activity_chat_room">ChatRoomActivity</string>
+    <string name="tab_text_1">Chats</string>
+    <string name="tab_text_2">Add</string>
+    <string name="tab_text_3">Calls</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Language</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="ui">UI</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
+    <string name="title_activity_settings2">Settings</string>
+    <string name="resend">Resend Code</string>
+</resources>
