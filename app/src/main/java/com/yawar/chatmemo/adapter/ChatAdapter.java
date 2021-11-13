@@ -136,26 +136,16 @@ public class ChatAdapter extends BaseAdapter {
         }
     }
     public void filter(String charText) {
-
-
             for (ChatMessage wp : chatMessages) {
-
-
                 if (wp.getMessage().toString().toLowerCase(Locale.getDefault()).contains(charText)) {
                     int index = wp.getMessage().toString().toLowerCase(Locale.getDefault()).indexOf(charText);
 
                     Spannable WordtoSpan = new SpannableString(wp.getMessage().toString());
                     WordtoSpan.setSpan(new ForegroundColorSpan(Color.BLUE), index, index+charText.length(),
                             Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
                     wp.setMessage(WordtoSpan);
-
-
-
                 }
             }
-
-
         notifyDataSetChanged();
     }
 

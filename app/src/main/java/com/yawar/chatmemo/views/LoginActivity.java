@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.yawar.chatmemo.Api.AuthApi;
+import com.yawar.chatmemo.Api.ClassSharedPreferences;
 import com.yawar.chatmemo.R;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -45,6 +46,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
     String idToken;
+    ClassSharedPreferences classSharedPreferences;
 
 
 
@@ -54,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        classSharedPreferences= new ClassSharedPreferences(this);
         firebaseAuth = com.google.firebase.auth.FirebaseAuth.getInstance();
         authStateListener = new FirebaseAuth.AuthStateListener(){
             @Override
@@ -107,6 +109,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     // if the text field is not empty we are calling our
                     // send OTP method for getting OTP from Firebase.
                     String phone = "+964" + edtPhone.getText().toString();
+                    classSharedPreferences.setNumber(phone);
+
                     AuthApi authApi = new AuthApi(LoginActivity.this);
                     authApi.sendVerificationCode(phone, LoginActivity.this);
                 }
@@ -133,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             name = account.getDisplayName();
             System.out.println(name+"mmmmmmmmmmmmmmmmmmmmmm");
             email = account.getEmail();
-            authApi.setName(name);
+            classSharedPreferences.setName(name);
             // you can store user data to SharedPreference
             AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
             firebaseAuthWithGoogle(credential);

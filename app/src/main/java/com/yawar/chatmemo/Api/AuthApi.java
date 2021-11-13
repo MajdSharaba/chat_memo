@@ -14,18 +14,19 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.yawar.chatmemo.views.BasicActivity;
+import com.yawar.chatmemo.views.RegisterActivity;
 import com.yawar.chatmemo.views.VerificationActivity;
 
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
-
+/////this class for Api with firebase
 public class AuthApi {
-   private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
 
 
@@ -36,7 +37,10 @@ public class AuthApi {
     Context context;
 
     private String verificationId;
+
+
     private void signInWithCredential(PhoneAuthCredential credential) {
+        ClassSharedPreferences classSharedPreferences = new ClassSharedPreferences(context);
 
         // inside this method we are checking if
         // the code entered is correct or not.
@@ -45,9 +49,12 @@ public class AuthApi {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseUser user = task.getResult().getUser();
+                            System.out.println(user.getPhoneNumber()+"phone number");
+                            classSharedPreferences.setVerficationNumber(user.getPhoneNumber());
                             // if the code is correct and the task is successful
                             // we are sending our user to new activity.
-                            Intent i = new Intent(context, BasicActivity.class);
+                            Intent i = new Intent(context, RegisterActivity.class);
                             context.startActivity(i);
                         } else {
                             // if the code is not correct then we are
@@ -63,13 +70,30 @@ public class AuthApi {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
 
-                        .setPhoneNumber("+9647510487448")
+                        .setPhoneNumber(number)
                         .setActivity(activity)// Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setCallbacks(mCallBack)           // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+
     }
+//    private void resendVerificationCode(String phoneNumber,
+//                                        PhoneAuthProvider.ForceResendingToken token,Activity activity) {
+//        SharedPreferences prefs = context.getSharedPreferences("auth", MODE_PRIVATE);
+//
+//        String name = prefs.getString("verificationid",null);
+//        PhoneAuthOptions options =
+//                PhoneAuthOptions.newBuilder(mAuth)
+//                        .setPhoneNumber(phoneNumber)       // Phone number to verify
+//                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+//                        .setActivity(activity)                 // Activity (for callback binding)
+//                        .setCallbacks(mCallBack)          // OnVerificationStateChangedCallbacks
+//                        .setForceResendingToken(name)     // ForceResendingToken from callbacks
+//                        .build();
+//        PhoneAuthProvider.verifyPhoneNumber(options);
+//    }
+    //"+9647510487448"
 ///7517863790
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
 
@@ -86,6 +110,7 @@ public class AuthApi {
 
 
             super.onCodeSent(verificationid, forceResendingToken);
+
             // when we receive the OTP it
             // contains a unique id which
             // we are storing in our string
@@ -93,7 +118,7 @@ public class AuthApi {
             Log.d("nnmn", "onCodeSent:" + verificationid);
 
 
-           prefs.edit().putString("verificationid",verificationid).commit();
+            prefs.edit().putString("verificationid",verificationid).commit();
             Intent i = new Intent(context, VerificationActivity.class);
             context.startActivity(i);
 
@@ -105,7 +130,7 @@ public class AuthApi {
         public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
             // below line is used for getting OTP code
             // which is sent in phone auth credentials.
-           // final String code = phoneAuthCredential.getSmsCode();
+            // final String code = phoneAuthCredential.getSmsCode();
 
             // checking if the code
             // is null or not.
@@ -150,46 +175,9 @@ public class AuthApi {
         // calling sign in method.
         signInWithCredential(credential);
     }
-    public void setName(String name){
-        SharedPreferences prefs = context.getSharedPreferences("profile", MODE_PRIVATE);
-        prefs.edit().putString("name",name).commit();
-        System.out.println("Memo+"+name);
-
-    }
-    public void setNumber(String number){
-        SharedPreferences prefs = context.getSharedPreferences("profile", MODE_PRIVATE);
-        prefs.edit().putString("number",number).commit();
-
-    }
-    public String getName(){
-        SharedPreferences prefs = context.getSharedPreferences("profile", MODE_PRIVATE);
-
-        String name = prefs.getString("name","UserName");
-        return  name;
 
 
-    }
-    public String getNumber(){
-        SharedPreferences prefs = context.getSharedPreferences("profile", MODE_PRIVATE);
-
-        String name = prefs.getString("number","UserName");
-        return  name;
-
-    }
-    public void setLocale(String lan){
-        SharedPreferences prefs = context.getSharedPreferences("language", MODE_PRIVATE);
-
-        prefs.edit().putString("lan",lan).commit();
-
-
-    }
-    public String getLocale(){
-
-        SharedPreferences prefs = context.getSharedPreferences("language", MODE_PRIVATE);
-
-
-        String lan = prefs.getString("lan","ar");
-        return lan;
-
-    }
 }
+
+
+

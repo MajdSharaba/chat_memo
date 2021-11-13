@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.yawar.chatmemo.R;
 import com.yawar.chatmemo.views.UserDetailsActivity;
@@ -55,22 +56,24 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
         holder.name.setText(list.get(position).name);
-        holder.imageView.setImageResource(list.get(position).imageId);
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
-                View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_custom_layout, null);
-                ImageView photoView = mView.findViewById(R.id.imageView);
-                photoView.setImageResource(list.get(position).imageId);
-                mBuilder.setView(mView);
-                AlertDialog mDialog = mBuilder.create();
-                mDialog.show();
-//                Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
-//                view.getContext().startActivity(intent);
-//                Toast.makeText(view.getContext(),"Movie Name clicked",Toast.LENGTH_SHORT).show();
-            }
-        });
+        holder.lastMessage.setText(list.get(position).lastMessage);
+        Glide.with(holder.imageView.getContext()).load(list.get(position).getImage()).into(holder.imageView);
+       // holder.imageView.setImageResource(list.get(position).imageId);
+//        holder.imageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
+//                View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_custom_layout, null);
+//                ImageView photoView = mView.findViewById(R.id.imageView);
+//                photoView.setImageResource(list.get(position).imageId);
+//                mBuilder.setView(mView);
+//                AlertDialog mDialog = mBuilder.create();
+//                mDialog.show();
+////                Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
+////                view.getContext().startActivity(intent);
+////                Toast.makeText(view.getContext(),"Movie Name clicked",Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 
@@ -80,22 +83,18 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
     }
 
     public void filter(String charText) {
-        System.out.println(charText+"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
         charText = charText.toLowerCase(Locale.getDefault());
             listsearch.clear();
         if (charText.length() == 0) {
-            System.out.println(charText+"MMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
 
             listsearch.addAll(listsearch2);
         } else {
-            System.out.println(charText+"MMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
             for (ChatRoomModel wp : listsearch2) {
                 if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
                     listsearch.add(wp);
                 }
             }
         }
-        System.out.println(charText+"LLLLLLLLLLLLLLLLLLLLL");
         list.clear();
         list.addAll(listsearch);
         notifyDataSetChanged();
@@ -105,14 +104,17 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
  class View_Holder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
     TextView name;
+    TextView lastMessage;
     ImageView imageView;
-     ListItemClickListener mListener;
+    ListItemClickListener mListener;
 
     View_Holder(View itemView , ListItemClickListener listener) {
         super(itemView);
         mListener = listener;
         name = (TextView) itemView.findViewById(R.id.name);
+        lastMessage = (TextView) itemView.findViewById(R.id.lastMessage);
         imageView = (ImageView) itemView.findViewById(R.id.image);
+
         itemView.setOnClickListener(this);
     }
 

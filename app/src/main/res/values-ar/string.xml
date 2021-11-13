@@ -42,4 +42,6 @@
     <string name="dark_mode">داكن</string>
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
     <string name="title_activity_settings2">الأعدادات</string>
+    <string name="resend">ارسال الكود</string>
+
 </resources>

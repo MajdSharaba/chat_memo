@@ -19,6 +19,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 
 import com.yawar.chatmemo.Api.AuthApi;
+import com.yawar.chatmemo.Api.ClassSharedPreferences;
 import com.yawar.chatmemo.R;
 
 import java.util.Locale;
@@ -26,7 +27,7 @@ import java.util.Locale;
 
 public class SettingsActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener,
         Preference.SummaryProvider<androidx.preference.ListPreference> {
-    AuthApi authApi;
+    ClassSharedPreferences classSharedPreferences;
     Resources resources;
 
     @Override
@@ -36,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.settings_activity);
         getSupportActionBar().setTitle(R.string.title_activity_settings2);
-        authApi = new AuthApi(SettingsActivity.this);
+        classSharedPreferences = new ClassSharedPreferences(SettingsActivity.this);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -81,31 +82,23 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
 //            Locale jaLocale1 = new Locale("en");
 //            setLanguage(jaLocale1);
             final String[] languageValues = getResources().getStringArray(R.array.language_values);
-            String pref = authApi.getLocale();
+            String pref = classSharedPreferences.getLocale();
             if (pref.equals(languageValues[0])){
-                System.out.println(pref+languageValues[0]+"kkkkkkkkkkkkkkkkkkkkkkkkk");
 
 
               setLanguage("ar");
-                authApi.setLocale("ar");
-//               Context context = LocaleHelper.setLocale(SettingsActivity.this, "en");
-//                resources = context.getResources();
-               // messageView.setText(resources.getString(R.string.language));
+                classSharedPreferences.setLocale("ar");
+//
             }
             if (pref.equals(languageValues[1])){
-                System.out.println(pref+languageValues[1]+"kkkkkkkkkkkkkkkkkkkkkkkkk");
 
 
                 setLanguage("en");
-                authApi.setLocale("en");
-//               Locale  jaLocale1 = new Locale("ar");
-//                authApi.setLocale("en");
+                classSharedPreferences.setLocale("en");
 //
-//                setLanguage(jaLocale1);
             }
 
 
-//            attachBaseContext(SettingsActivity.this);
         }
 
 
@@ -128,7 +121,6 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     private void setLanguage(String lan) {
-        System.out.println(lan.toString()+"lllllllllllllllllllllllllllllllllllllllllllllllllllll");
         Locale locale = new Locale(lan);
         Locale.setDefault(locale);
         Resources resources = this.getResources();
@@ -138,8 +130,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         Intent intent = new Intent(SettingsActivity.this,SettingsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
-//        ContextWrapper localeUpdatedContext = ContextUtils.updateLocale(SettingsActivity.this, jaLocale);
-//        attachBaseContext(localeUpdatedContext);
+
     }
 
 //    @Override

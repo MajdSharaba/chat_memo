@@ -20,6 +20,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yawar.chatmemo.Api.AuthApi;
+import com.yawar.chatmemo.Api.ClassSharedPreferences;
 import com.yawar.chatmemo.R;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
@@ -37,8 +38,8 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        AuthApi authApi = new AuthApi(ProfileActivity.this);
-        name = authApi.getName();
+        ClassSharedPreferences classSharedPreferences = new ClassSharedPreferences(ProfileActivity.this);
+        name = classSharedPreferences.getName();
 
 
 

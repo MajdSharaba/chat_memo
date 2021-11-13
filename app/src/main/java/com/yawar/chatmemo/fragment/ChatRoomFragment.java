@@ -112,20 +112,20 @@ public class ChatRoomFragment extends Fragment {
     public List<ChatRoomModel> fill_with_data() {
 
         List<ChatRoomModel> data = new ArrayList<>();
-        data.add(new ChatRoomModel("sh", R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd", R.drawable.th));
-        data.add(new ChatRoomModel("majd", R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd", R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd",  R.drawable.th));
-        data.add(new ChatRoomModel("majd", R.drawable.th));
+//        data.add(new ChatRoomModel("sh", R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd", R.drawable.th));
+//        data.add(new ChatRoomModel("majd", R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd", R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd",  R.drawable.th));
+//        data.add(new ChatRoomModel("majd", R.drawable.th));
 
         return data;
     }
