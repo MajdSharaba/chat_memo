@@ -44,7 +44,7 @@ public class ServerApi {
     public void register(String firstName, String lastName, String email, String imageString) {
         classSharedPreferences = new ClassSharedPreferences(context);
         // url to post our data
-        String url = "http://192.168.1.10:8080/yawar_chat/APIS/signup.php";
+        String url = "http://192.168.1.13:8080/yawar_chat/APIS/signup.php";
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();

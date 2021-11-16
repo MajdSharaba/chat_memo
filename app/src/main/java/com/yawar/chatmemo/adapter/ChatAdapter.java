@@ -136,6 +136,7 @@ public class ChatAdapter extends BaseAdapter {
         }
     }
     public void filter(String charText) {
+        System.out.println("majd");
             for (ChatMessage wp : chatMessages) {
                 if (wp.getMessage().toString().toLowerCase(Locale.getDefault()).contains(charText)) {
                     int index = wp.getMessage().toString().toLowerCase(Locale.getDefault()).indexOf(charText);

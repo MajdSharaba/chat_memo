@@ -1,5 +1,6 @@
 package com.yawar.chatmemo.views;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -21,6 +22,7 @@ import androidx.preference.Preference;
 import com.yawar.chatmemo.Api.AuthApi;
 import com.yawar.chatmemo.Api.ClassSharedPreferences;
 import com.yawar.chatmemo.R;
+import com.yawar.chatmemo.utils.MyContextWrapper;
 
 import java.util.Locale;
 
@@ -37,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.settings_activity);
         getSupportActionBar().setTitle(R.string.title_activity_settings2);
+        System.out.println("oncreate first");
         classSharedPreferences = new ClassSharedPreferences(SettingsActivity.this);
 
         getSupportFragmentManager()
@@ -132,6 +135,18 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         startActivity(intent);
 
     }
+//            @RequiresApi(api = Build.VERSION_CODES.N)
+//        @Override
+//    protected void attachBaseContext(Context newBase) {
+//                System.out.println("attach first");
+//
+////                ClassSharedPreferences classSharedPreferences = new ClassSharedPreferences(SettingsActivity.this);
+////        String lan = classSharedPreferences.getLocale();
+//        Locale locale = new Locale("en");
+//        Locale.setDefault(locale);
+//
+//
+//        super.attachBaseContext(MyContextWrapper.wrap(newBase, locale));}
 
 //    @Override
 //    protected void attachBaseContext(Context newBase) {

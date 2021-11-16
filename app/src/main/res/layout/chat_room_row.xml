@@ -69,10 +69,10 @@
         android:textSize="20sp" />
     <TextView
             android:id="@+id/lastMessage"
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/image"
-            android:layout_marginLeft="10dp"
+            android:maxLines="1"
             android:text="Hello how are you"
             android:textColor="#808080"
             android:textSize="15sp" />

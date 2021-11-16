@@ -23,6 +23,8 @@ import com.yawar.chatmemo.R;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class RegisterActivity extends AppCompatActivity {
@@ -78,7 +80,9 @@ public class RegisterActivity extends AppCompatActivity {
                 fName = edFname.getText().toString();
                 lName = edLname.getText().toString();
                 email = edEmail.getText().toString();
-                serverApi.register(fName,lName,email,imageString);
+                if(CheckAllFields()){
+
+                serverApi.register(fName,lName,email,imageString);}
             }
         });
 
@@ -120,7 +124,19 @@ public class RegisterActivity extends AppCompatActivity {
             image.setImageURI(imageUri);
         }
     }
+    private boolean CheckAllFields() {
+        char[] chars = fName.toCharArray();
+        for(char c : chars){
+            if(Character.isDigit(c)){
+                edFname.setError("Enter Valied Name");
+                return false;
+            }
 
+        }
+
+        // after all validation return true.
+        return true;
+    }
     
 //    private void postData(String firstname, String lastname) {
 //        Retrofit retrofit = apiClient.getClient();

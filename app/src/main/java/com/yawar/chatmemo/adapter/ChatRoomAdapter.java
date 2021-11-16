@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.yawar.chatmemo.R;
-import com.yawar.chatmemo.views.UserDetailsActivity;
 import com.yawar.chatmemo.interfac.ListItemClickListener;
+import com.yawar.chatmemo.views.UserDetailsActivity;
 import com.yawar.chatmemo.model.ChatRoomModel;
 
 import java.util.ArrayList;
@@ -83,6 +83,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
     }
 
     public void filter(String charText) {
+        System.out.println(charText+listsearch2.size());
         charText = charText.toLowerCase(Locale.getDefault());
             listsearch.clear();
         if (charText.length() == 0) {
@@ -120,8 +121,10 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
 
      @Override
      public void onClick(View view) {
-         mListener.onClick(view, getAdapterPosition());
+         mListener.onClick(view, list.get(getAdapterPosition()));
 
      }
  }}
+
+
 

@@ -106,9 +106,20 @@ public class BasicActivity extends AppCompatActivity {
 
 
         ///// for set Adapter
-        listener = (view1, position) -> {
-            Toast.makeText(this, "Position " + position, Toast.LENGTH_SHORT).show();
+        listener = (view1, chatRoomModel) -> {
+            Toast.makeText(this, "Position " + chatRoomModel.lastMessage, Toast.LENGTH_SHORT).show();
+            System.out.println(chatRoomModel.name);
+            Bundle bundle = new Bundle();
+
+
+            bundle.putString("sender_id", chatRoomModel.senderId);
+            bundle.putString("reciver_id",chatRoomModel.reciverId);
+            bundle.putString("name",chatRoomModel.name);
+            bundle.putString("image",chatRoomModel.getImage());
+
+
             Intent intent = new Intent(this, ConversationActivity.class);
+            intent.putExtras(bundle);
 
             startActivity(intent);
         };
@@ -122,13 +133,18 @@ public class BasicActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
+        itemAdapter = new ChatRoomAdapter(postList, getApplicationContext(), listener);
+        recyclerView.setAdapter(itemAdapter);
         GetData();
 //        postList =serverApi.getChatRoom(recyclerView,listener);
 //         itemAdapter = new ChatRoomAdapter(postList,BasicActivity.this, listener);
 ////                itemAdapter=new ChatRoomAdapter(getApplicationContext(),postList);
 //        recyclerView.setAdapter(itemAdapter);
-//        itemAdapter.notifyDataSetChanged();        recyclerView.setAdapter(itemAdapter);
+//        itemAdapter.notifyDataSetChanged();
+//        //        itemAdapter.notifyDataSetChanged(); recyclerView.setAdapter(itemAdapter);
+        itemAdapter.notifyDataSetChanged();
         System.out.println(postList.size());
+
 
 //        ChatRoomFragment chatRoomFrafment = new ChatRoomFragment();
 ////////////// for search
@@ -209,14 +225,14 @@ public class BasicActivity extends AppCompatActivity {
         System.out.println(userModel.getUserId());
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
-        progressDialog.show();
+       // progressDialog.show();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest request = new StringRequest(Request.Method.GET, "http://192.168.1.10:8080/yawar_chat/APIS/mychat.php?user_id=2", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, "http://192.168.1.13:8080/yawar_chat/APIS/mychat.php?user_id=2", new Response.Listener<String>() {
 
 
             @Override
             public void onResponse(String response) {
-//                System.out.println(response);
+//                progressDialog.dismiss();
                 try {
                     JSONObject respObj = new JSONObject(response);
                     System.out.println(respObj);
@@ -224,7 +240,7 @@ public class BasicActivity extends AppCompatActivity {
 //                    JSONArray jsonArray = new JSONArray(respObj.getJSONArray("data"));
                     System.out.println(jsonArray);
 
-                    for (int i = 0; i <= jsonArray.length(); i++) {
+                    for (int i = 0; i <= jsonArray.length()-1; i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         System.out.println(jsonObject.getString("last_message"));
 
@@ -233,18 +249,18 @@ public class BasicActivity extends AppCompatActivity {
                                 jsonObject.getString("sender_id"),
                                 jsonObject.getString("reciver_id"),
                                 jsonObject.getString("last_message"),
-                                "http://192.168.1.10:8080/yawar_chat/uploads/profile/"+jsonObject.getString("image")
+                                "http://192.168.1.13:8080/yawar_chat/uploads/profile/"+jsonObject.getString("image")
 //                                "https://th.bing.com/th/id/OIP.2s7VxdmHEoDKji3gO_i-5QHaHa?pid=ImgDet&rs=1"
 
                         ));
-                        System.out.println("http://192.168.1.10:8080/yawar_chat/uploads/profile/"+jsonObject.getString("image"));
+                        System.out.println("http://192.168.1.13:8080/yawar_chat/uploads/profile/"+jsonObject.getString("image"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     progressDialog.dismiss();
                 }
                 itemAdapter = new ChatRoomAdapter(postList, getApplicationContext(), listener);
-//                itemAdapter=new ChatRoomAdapter(getApplicationContext(),postList);
+////                itemAdapter=new ChatRoomAdapter(getApplicationContext(),postList);
                 recyclerView.setAdapter(itemAdapter);
                 itemAdapter.notifyDataSetChanged();
                 Toast.makeText(BasicActivity.this, "Success", Toast.LENGTH_SHORT).show();
@@ -276,21 +292,17 @@ public class BasicActivity extends AppCompatActivity {
 //
 //        super.onResume();
 //    }
-    //    @Override
+//        @RequiresApi(api = Build.VERSION_CODES.N)
+//        @Override
 //    protected void attachBaseContext(Context newBase) {
 //        Locale localeToSwitchTo;
+//        classSharedPreferences = new ClassSharedPreferences(BasicActivity.this);
+//        String lan = classSharedPreferences.getLocale();
+//        Locale locale = new Locale(lan);
+//        Locale.setDefault(locale);
 //
-//        SharedPreferences prefs = getSharedPreferences("languag", MODE_PRIVATE);
 //
-//
-//        String lan = prefs.getString("lan","ar");
-//
-//        if(lan.equals("en")){
-//         localeToSwitchTo = new Locale("en");}
-//        else{
-//             localeToSwitchTo = new Locale("en");}
-//        ContextWrapper localeUpdatedContext = ContextUtils.updateLocale(newBase, localeToSwitchTo);
-//        super.attachBaseContext(localeUpdatedContext);}
+//        super.attachBaseContext(MyContextWrapper.wrap(newBase, locale));}
 
 
 //        data = fill_with_data();

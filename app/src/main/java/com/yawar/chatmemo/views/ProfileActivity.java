@@ -22,45 +22,51 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yawar.chatmemo.Api.AuthApi;
 import com.yawar.chatmemo.Api.ClassSharedPreferences;
 import com.yawar.chatmemo.R;
+import com.yawar.chatmemo.model.UserModel;
 
 public class ProfileActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private ImageView image;
     EditText editText;
     String name;
     Button logOutBtn;
+    UserModel userModel;
     private static final int PICK_IMAGE = 100;
     Uri imageUri;
     private GoogleApiClient googleApiClient;
     private GoogleSignInOptions gso;
+    BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        ClassSharedPreferences classSharedPreferences = new ClassSharedPreferences(ProfileActivity.this);
-        name = classSharedPreferences.getName();
+        initView();
+        initAction();}
+//        ClassSharedPreferences classSharedPreferences = new ClassSharedPreferences(ProfileActivity.this);
+//        userModel = classSharedPreferences.getUser();
+//        name = classSharedPreferences.getName();
 
 
 
-        image = findViewById(R.id.image);
-        image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openGallery();
-            }
-        });
-        editText = findViewById(R.id.username);
-        editText.setHint(name);
-//        logOutBtn = findViewById(R.id.btn_logout);
-        gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        googleApiClient=new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
-                .build();
+//        image = findViewById(R.id.image);
+//        image.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                openGallery();
+//            }
+//        });
+//        editText = findViewById(R.id.username);
+//        editText.setHint(userModel.getUserName()+userModel.getLastName());
+////        logOutBtn = findViewById(R.id.btn_logout);
+//        gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+//                .requestEmail()
+//                .build();
+//
+//        googleApiClient=new GoogleApiClient.Builder(this)
+//                .enableAutoManage(this,this)
+//                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+//                .build();
 //        logOutBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -79,10 +85,45 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
 //                        });
 //            }
 //        });
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        bottomNavigationView.setSelectedItemId(R.id.addchat);
+//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+//        bottomNavigationView.setSelectedItemId(R.id.addchat);
 //        openFragment(new ChatRoomFragment());
 
+//        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                switch (item.getItemId()) {
+//
+//                    case R.id.chat:
+//                        Intent intent = new Intent(ProfileActivity.this, BasicActivity.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//                        startActivity(intent);
+//
+////                        openFragment(new ChatRoomFragment());
+//                        return true;
+//
+//                    case R.id.addchat:
+//                        return  true;
+//
+//                    case R.id.calls:
+////                        openFragment(new BlankFragment());
+//                        return true;
+//
+//
+//                }
+//
+//                return false;
+//            }
+//        });
+
+
+    private void initAction() {
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -110,6 +151,27 @@ public class ProfileActivity extends AppCompatActivity implements GoogleApiClien
             }
         });
     }
+
+    private void initView() {
+        ClassSharedPreferences classSharedPreferences = new ClassSharedPreferences(ProfileActivity.this);
+        userModel = classSharedPreferences.getUser();
+        name = classSharedPreferences.getName();
+        image = findViewById(R.id.image);
+        editText = findViewById(R.id.username);
+        editText.setHint(userModel.getUserName()+userModel.getLastName());
+//        logOutBtn = findViewById(R.id.btn_logout);
+        gso =  new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        googleApiClient=new GoogleApiClient.Builder(this)
+                .enableAutoManage(this,this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API,gso)
+                .build();
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setSelectedItemId(R.id.addchat);
+    }
+
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);

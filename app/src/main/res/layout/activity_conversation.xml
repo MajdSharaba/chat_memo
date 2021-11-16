@@ -21,6 +21,7 @@
             android:minHeight="?attr/actionBarSize"
 
             >
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -44,6 +45,7 @@
                 android:layout_marginLeft="15dp"
                 app:civ_border_width="2dp" />
             <TextView
+                android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="majd"
@@ -57,8 +59,14 @@
                     android:id="@+id/search_con"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    />
+                    android:layout_marginStart="18dp" />
             </LinearLayout>
+
+
+
+
+
+
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 

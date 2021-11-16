@@ -1,21 +1,32 @@
 package com.yawar.chatmemo.model;
 
-import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 
 public class ChatMessage {
-    private long id;
+    private String id;
     private boolean isMe;
     private Spannable message;
-    private Long userId;
+    private String userId;
     private String dateTime;
 
-    public long getId() {
+    public ChatMessage(String id, boolean isMe, String message, String userId, String dateTime) {
+        this.id = id;
+        this.isMe = isMe;
+        this.message = new SpannableString(message);
+        this.userId = userId;
+        this.dateTime = dateTime;
+    }
+
+    public ChatMessage() {
+
+    }
+
+
+    public String getId() {
         return id;
     }
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public boolean getIsme() {
@@ -37,11 +48,11 @@ public class ChatMessage {
         this.message=message;
 
     }
-    public long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
