@@ -17,7 +17,7 @@
     <string name="dark_mode_selected"> Dark Mode Selected</string>
     <string name="title_activity_chat_room">ChatRoomActivity</string>
     <string name="tab_text_1">Chats</string>
-    <string name="tab_text_2">Add</string>
+    <string name="tab_text_2">search</string>
     <string name="tab_text_3">Calls</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -42,4 +42,23 @@
     <string name="dark_mode_def_value">MODE_NIGHT_FOLLOW_SYSTEM</string>
     <string name="title_activity_settings2">Settings</string>
     <string name="resend">Resend Code</string>
+    <string-array name="android_dropdown_arrays">
+        <item>Choose a Item</item>
+        <item>number 1</item>
+        <item>number 2</item>
+        <item>number 3</item>
+        <item>number 5</item>
+        <item>number 6</item>
+        <item>number 7</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+        <item>number 8</item>
+    </string-array>
 </resources>

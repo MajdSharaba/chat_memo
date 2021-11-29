@@ -5,7 +5,6 @@
     android:layout_height="75dp"
     app:cardElevation="5dp"
     app:cardCornerRadius="5dp"
-    android:layout_margin="0.1dp"
     app:cardBackgroundColor="@color/backgroundColor"
     app:cardMaxElevation="5dp"
     app:cardPreventCornerOverlap="true"
@@ -61,7 +60,6 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/image"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:text="abcd"
@@ -69,7 +67,7 @@
         android:textSize="20sp" />
     <TextView
             android:id="@+id/lastMessage"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/image"
             android:maxLines="1"

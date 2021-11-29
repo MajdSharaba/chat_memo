@@ -25,7 +25,7 @@
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/search"
-
+                    app:searchIcon="@android:drawable/ic_menu_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
@@ -55,14 +55,28 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recycler"
          />
         </LinearLayout>
+
+
     </FrameLayout>
 
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:backgroundTint="@color/green_500"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"
@@ -75,7 +89,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-
         app:menu="@menu/bottom_nav_menu" />
 
 

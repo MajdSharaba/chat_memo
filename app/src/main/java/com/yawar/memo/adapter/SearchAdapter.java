@@ -1,0 +1,168 @@
+package com.yawar.memo.adapter;
+
+import android.app.Activity;
+import android.content.ContentProviderOperation;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.ContactsContract;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
+import com.yawar.memo.R;
+import com.yawar.memo.model.SearchRespone;
+import com.yawar.memo.model.SendContactNumberResponse;
+import com.yawar.memo.views.BasicActivity;
+
+import java.util.ArrayList;
+
+
+
+    public class SearchAdapter extends RecyclerView.Adapter<com.yawar.memo.adapter.SearchAdapter.ViewHolders> {
+        ///Initialize variable
+        Activity activity;
+        ArrayList<SearchRespone> arrayList;
+
+        ///Create constructor
+        public SearchAdapter(Activity activity, ArrayList<SearchRespone> arrayList) {
+            this.activity = activity;
+            this.arrayList = arrayList;
+            notifyDataSetChanged();
+        }
+
+
+        @NonNull
+        @Override
+        public com.yawar.memo.adapter.SearchAdapter.ViewHolders onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            ///Initialize view
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search, parent, false);
+
+            return new com.yawar.memo.adapter.SearchAdapter.ViewHolders(view);
+        }
+
+
+        @Override
+        public void onBindViewHolder(@NonNull com.yawar.memo.adapter.SearchAdapter.ViewHolders holder, int position) {
+
+            SearchRespone model = arrayList.get(position);
+            holder.tvName.setText(model.getName());
+            holder.tvNumber.setText(model.getSecretNumber());
+            System.out.println(model.getImage());
+
+            Glide.with(holder.imageView.getContext()).load(model.getImage()).into(holder.imageView);
+            if(!contactExists(model.getPhone())){
+                holder.button.setVisibility(View.VISIBLE);
+            }
+            holder.button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    System.out.println("majdno Erooooor");
+                    addToContact(model.getName(),model.getPhone());
+                }
+            });
+
+
+
+
+        }
+
+        @Override
+        public int getItemCount() {
+            return arrayList.size();
+        }
+        public  boolean contactExists(String number){
+
+
+            Uri lookupUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(number));
+
+            String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
+
+            Cursor cur = activity.getContentResolver().query(lookupUri,mPhoneNumberProjection, null, null, null);
+            try {
+                if (cur.moveToFirst()) {
+                    // if contact are in contact list it will return true
+                    System.out.println("true");
+                    return true;
+                }} finally {
+                if (cur != null)
+                    cur.close();
+            }
+            //if contact are not match that means contact are not added
+            return  false;
+        }
+
+        public void addToContact (String name, String number){
+
+                            ArrayList <ContentProviderOperation> ops = new ArrayList < ContentProviderOperation > ();
+
+                ops.add(ContentProviderOperation.newInsert(
+                        ContactsContract.RawContacts.CONTENT_URI)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
+                        .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
+                        .build());
+
+                //------------------------------------------------------ Names
+                if (name != null) {
+                    System.out.println("name added");
+                    ops.add(ContentProviderOperation.newInsert(
+                            ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                            .withValue(
+                                    ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME,
+                                    name).build());
+                }
+
+                //------------------------------------------------------ Mobile Number
+                if (number != null) {
+                    ops.add(ContentProviderOperation.
+                            newInsert(ContactsContract.Data.CONTENT_URI)
+                            .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.TYPE,
+                                    ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                            .build());
+                }
+            // Asking the Contact provider to create a new contact
+            try {
+                activity.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(activity, "Exception: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+                notifyDataSetChanged();
+
+
+        }
+
+
+        public class ViewHolders extends RecyclerView.ViewHolder {
+            ///Initialize variable
+            TextView tvName;
+            TextView tvNumber;
+            ImageView imageView;
+            Button button;
+            public ViewHolders(@NonNull View itemView) {
+                super(itemView);
+                ////Assign variable
+                tvName = itemView.findViewById(R.id.tv_name);
+                tvNumber = itemView.findViewById(R.id.tv_number);
+                imageView = itemView.findViewById(R.id.iv_image);
+                button = itemView.findViewById(R.id.btn_add);
+            }
+
+        }
+    }
+
+

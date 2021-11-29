@@ -6,9 +6,9 @@
         android:title= "@string/tab_text_1"
         android:icon="@drawable/ic_message"/>
     <item
-        android:id="@+id/addchat"
+        android:id="@+id/searchSn"
         android:title="@string/tab_text_2"
-        android:icon="@drawable/ic_add"/>
+        android:icon="@drawable/ic_search"/>
 
     <item
         android:id="@+id/calls"

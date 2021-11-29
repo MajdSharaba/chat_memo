@@ -1,42 +1,49 @@
 {
   "project_info": {
-    "project_number": "234926456780",
-    "project_id": "androidchat-3f5b7",
-    "storage_bucket": "androidchat-3f5b7.appspot.com"
+    "project_number": "977335517103",
+    "project_id": "memo-d0344",
+    "storage_bucket": "memo-d0344.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:234926456780:android:4894e926e430fe692f2769",
+        "mobilesdk_app_id": "1:977335517103:android:567864081bdc543533f95a",
         "android_client_info": {
-          "package_name": "com.yawar.chatmemo"
+          "package_name": "com.yawar.memo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "234926456780-pbfkg0sik24910fcur08lkb5b4c3jin2.apps.googleusercontent.com",
+          "client_id": "977335517103-du3fko23fcmj1dpir80mu2mcsrtni0ci.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.yawar.chatmemo",
+            "package_name": "com.yawar.memo",
             "certificate_hash": "87f13dab3def255a124d63fd887e91a8bcd33530"
           }
         },
         {
-          "client_id": "234926456780-902b37jeu44q7r128q7b3s3dapjpdavg.apps.googleusercontent.com",
+          "client_id": "977335517103-crk3l68qs3q3n78jr86m0e4pp85b7bi7.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyALS1jSJWnTgHg4fsjmMJLu-trRPL1I-sI"
+          "current_key": "AIzaSyC2mWJQZfb_dX8GnUjpNx5gNd6cBIFVG1U"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "234926456780-902b37jeu44q7r128q7b3s3dapjpdavg.apps.googleusercontent.com",
+              "client_id": "977335517103-crk3l68qs3q3n78jr86m0e4pp85b7bi7.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "977335517103-2kni6p8ighu1nl58li6l8s1amo0oncda.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "yawar.Memo"
+              }
             }
           ]
         }
