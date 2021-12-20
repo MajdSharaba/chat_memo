@@ -2,6 +2,7 @@ package com.yawar.memo.adapter;
 
 import android.app.Activity;
 import android.content.ContentProviderOperation;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
@@ -19,8 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.yawar.memo.R;
 import com.yawar.memo.model.SearchRespone;
-import com.yawar.memo.model.SendContactNumberResponse;
-import com.yawar.memo.views.BasicActivity;
 
 import java.util.ArrayList;
 
@@ -28,13 +27,30 @@ import java.util.ArrayList;
 
     public class SearchAdapter extends RecyclerView.Adapter<com.yawar.memo.adapter.SearchAdapter.ViewHolders> {
         ///Initialize variable
+
         Activity activity;
         ArrayList<SearchRespone> arrayList;
+        private CallbackInterface mCallback;
+        public interface CallbackInterface{
+
+            /**
+             * Callback invoked when clicked
+             * @param position - the position
+             * @param searchRespone - the text to pass back
+             */
+            void onHandleSelection(int position, SearchRespone searchRespone);
+        }
+
 
         ///Create constructor
         public SearchAdapter(Activity activity, ArrayList<SearchRespone> arrayList) {
             this.activity = activity;
             this.arrayList = arrayList;
+            try{
+                mCallback = (CallbackInterface) activity;
+            }catch(ClassCastException ex){
+                //.. should log the error or throw and exception
+            }
             notifyDataSetChanged();
         }
 
@@ -44,8 +60,9 @@ import java.util.ArrayList;
         public com.yawar.memo.adapter.SearchAdapter.ViewHolders onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             ///Initialize view
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search, parent, false);
+            SearchAdapter.ViewHolders holder = new SearchAdapter.ViewHolders(view);
 
-            return new com.yawar.memo.adapter.SearchAdapter.ViewHolders(view);
+            return holder;
         }
 
 
@@ -57,30 +74,61 @@ import java.util.ArrayList;
             holder.tvNumber.setText(model.getSecretNumber());
             System.out.println(model.getImage());
 
-            Glide.with(holder.imageView.getContext()).load(model.getImage()).into(holder.imageView);
+           // Glide.with(holder.imageView.getContext()).load(model.getImage()).into(holder.imageView);
+            if(!model.getImage().isEmpty()){
+                Glide.with(holder.imageView.getContext()).load("http://192.168.1.4:8080/yawar_chat/uploads/profile/"+model.getImage()).into(holder.imageView);}
             if(!contactExists(model.getPhone())){
                 holder.button.setVisibility(View.VISIBLE);
             }
             holder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    System.out.println("majdno Erooooor");
-                    addToContact(model.getName(),model.getPhone());
+                public void onClick(View v) {
+                    if(mCallback != null){
+                        mCallback.onHandleSelection(position, arrayList.get(position));
+                    }
                 }
             });
+//            holder.button.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    System.out.println("majdno Erooooor");
+//                    Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+//                    contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
+//
+//                    contactIntent
+//                            .putExtra(ContactsContract.Intents.Insert.NAME, model.getName())
+//                            .putExtra(ContactsContract.Intents.Insert.PHONE, model.getPhone());
+//
+//
+//                }
+//            });
+
 
 
 
 
         }
+//        @Override
+//        protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//            super.onActivityResult(requestCode, resultCode, intent);
+//
+//            if (requestCode == 1)
+//            {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    Toast.makeText(this, "Added Contact", Toast.LENGTH_SHORT).show();
+//                }
+//                if (resultCode == Activity.RESULT_CANCELED) {
+//                    Toast.makeText(this, "Cancelled Added Contact", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }
 
         @Override
         public int getItemCount() {
             return arrayList.size();
         }
+
         public  boolean contactExists(String number){
-
-
             Uri lookupUri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(number));
 
             String[] mPhoneNumberProjection = { ContactsContract.PhoneLookup._ID, ContactsContract.PhoneLookup.NUMBER, ContactsContract.PhoneLookup.DISPLAY_NAME};
@@ -152,6 +200,7 @@ import java.util.ArrayList;
             TextView tvName;
             TextView tvNumber;
             ImageView imageView;
+
             Button button;
             public ViewHolders(@NonNull View itemView) {
                 super(itemView);
@@ -161,7 +210,6 @@ import java.util.ArrayList;
                 imageView = itemView.findViewById(R.id.iv_image);
                 button = itemView.findViewById(R.id.btn_add);
             }
-
         }
     }
 

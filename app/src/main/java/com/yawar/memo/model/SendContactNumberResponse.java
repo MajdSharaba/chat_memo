@@ -1,12 +1,16 @@
 package com.yawar.memo.model;
 
-public class SendContactNumberResponse {
+import java.io.Serializable;
+
+public class SendContactNumberResponse  implements Serializable {
+    String id;
     String name;
     String number;
     String image;
     String state;
 
-    public SendContactNumberResponse(String name, String number, String image, String state) {
+    public SendContactNumberResponse(String id ,String name, String number, String image, String state) {
+        this.id = id;
         this.name = name;
         this.number = number;
         this.image = image;
@@ -43,5 +47,13 @@ public class SendContactNumberResponse {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

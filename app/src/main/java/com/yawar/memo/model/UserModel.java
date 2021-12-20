@@ -7,15 +7,19 @@ package com.yawar.memo.model;
    String email;
    String phone;
    String secretNumber;
+   String image;
+   String status;
 
 
-      public UserModel(String userId, String userName, String lastName, String email, String phone,String secretNumber) {
+      public UserModel(String userId, String userName, String lastName, String email, String phone,String secretNumber,String image,String status) {
           this.userId = userId;
           this.userName = userName;
           this.lastName = lastName;
           this.email = email;
           this.phone = phone;
           this.secretNumber = secretNumber;
+          this.image = image;
+          this.status = status;
       }
 
       public String getUserId() {
@@ -64,5 +68,21 @@ package com.yawar.memo.model;
 
       public void setSecretNumber(String secretNumber) {
           this.secretNumber = secretNumber;
+      }
+
+      public String getImage() {
+          return image;
+      }
+
+      public void setImage(String image) {
+          this.image = image;
+      }
+
+      public String getStatus() {
+          return status;
+      }
+
+      public void setStatus(String status) {
+          this.status = status;
       }
   }

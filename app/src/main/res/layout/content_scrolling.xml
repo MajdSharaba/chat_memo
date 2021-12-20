@@ -16,6 +16,7 @@
             android:orientation="vertical">
 
 
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -33,7 +34,7 @@
                     android:src="@drawable/ic_call" />
 
                 <TextView
-                    android:id="@+id/tvNumber1"
+                    android:id="@+id/tv_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -45,15 +46,42 @@
                     android:textColor="@color/textColor" />
 
                 <TextView
+                    android:id="@+id/tv_number_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tvNumber1"
+                    android:layout_below="@id/tv_number"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="8dp"
                     android:layout_toEndOf="@id/ivContactItem1"
                     android:layout_toRightOf="@id/ivContactItem1"
-                    android:text="Home"
+                    android:text="Mobile"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#727272" />
+                <TextView
+                    android:id="@+id/tv_special_number"
+                    android:layout_below="@id/tv_number_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/ivContactItem1"
+                    android:layout_toRightOf="@id/ivContactItem1"
+                    android:text="(123) 456-7890"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/textColor" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_special_number"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/ivContactItem1"
+                    android:layout_toRightOf="@id/ivContactItem1"
+                    android:text="Special Number"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#727272" />
 
@@ -134,6 +162,49 @@
 <!--            </RelativeLayout>-->
 
             <include layout="@layout/item_divider" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <ImageView
+                    android:id="@+id/ivContactItem4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:src="@drawable/ic_info" />
+
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_toEndOf="@id/ivContactItem4"
+                    android:layout_toRightOf="@id/ivContactItem4"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/textColor" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tv_status"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginStart="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@id/ivContactItem4"
+                    android:layout_toRightOf="@id/ivContactItem4"
+                    android:text="ٍStatus"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="#727272" />
+            </RelativeLayout>
+            <include layout="@layout/item_divider" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -153,7 +224,7 @@
                     android:src="@drawable/ic_email" />
 
                 <TextView
-                    android:id="@+id/tvNumber3"
+                    android:id="@+id/tv_email"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -169,7 +240,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tvNumber3"
+                    android:layout_below="@id/tv_email"
                     android:layout_marginLeft="@dimen/activity_horizontal_margin"
                     android:layout_marginStart="@dimen/activity_horizontal_margin"
                     android:layout_marginTop="8dp"
@@ -178,6 +249,9 @@
                     android:text="Home"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textColor="#727272" />
+
+
+
 
 <!--                <ToggleButton-->
 <!--                    android:id="@+id/chkState3"-->

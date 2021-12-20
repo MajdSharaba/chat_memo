@@ -8,8 +8,11 @@
     <color name="colorPrimaryLightPix">#80075e54</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
-    <color name="textColor">#FFFFFFFF</color>
-    <color name="backgroundColor">#FF000000</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="background_search">#020014</color>
+    <color name="background_bottom_navigation">#171717</color>
+
+    <color name="backgroundColor">#0B0618</color>
     <color name="background_send_message">#0D2934</color>
     <color name="background_recive_message">#918B8B</color>
     <color name="background_chat_page">#FF000000</color>

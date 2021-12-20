@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Memo</string>
     <string name="company_name">yawar</string>
-    <string name="powered_by">powered By</string>
+    <string name="from">من</string>
     <string name="send_code">ارسل رمز</string>
     <string name="or">أو</string>
     <string name="welcome">مرحبا!!</string>
@@ -20,6 +20,30 @@
     <string name="tab_text_1">المحادثات</string>
     <string name="tab_text_2">بحث</string>
     <string name="tab_text_3">اتصال</string>
+    <string name="tab_text_4">الملف الشخصي</string>
+    <string name="tab_text_5">الأعدادات</string>
+
+    <string name="special_number">الرقم الخاص</string>
+    <string name="first_name">الاسم</string>
+    <string name="last_name">الكنية</string>
+    <string name="group_name">اسم المجموعة</string>
+    <string name="memebers">الأعضاء</string>
+    <string name="enter_group_name">أدخل اسم المجموعة</string>
+    <string name="chat">المحادثات</string>
+    <string name="search">بحث</string>
+    <string name="archived">مؤرشفة</string>
+    <string name="contact_number">جهات الاتصال</string>
+    <string name="new_group">مجموعة جديدة</string>
+
+
+
+
+
+
+
+
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_settings">SettingsActivity</string>

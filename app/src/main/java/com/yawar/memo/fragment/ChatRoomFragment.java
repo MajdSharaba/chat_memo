@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.yawar.memo.views.ConversationActivity;
 import com.yawar.memo.R;
 import com.yawar.memo.adapter.ChatRoomAdapter;
-import com.yawar.memo.interfac.ListItemClickListener;
 import com.yawar.memo.model.ChatRoomModel;
 
 import java.util.ArrayList;
@@ -88,13 +87,14 @@ public class ChatRoomFragment extends Fragment {
 
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerfragment);
-        ListItemClickListener listener = (view1, position) -> {
-            Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(view.getContext(), ConversationActivity.class);
-
-            startActivity(intent);
-        };
-        itemAdapter = new ChatRoomAdapter(data , getContext(),listener);
+//        ListItemClickListener listener = (view1, position) -> {
+//            Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
+//            Intent intent = new Intent(view.getContext(), ConversationActivity.class);
+//
+//            startActivity(intent);
+//        };
+       /// itemAdapter = new ChatRoomAdapter(data , getContext(),listener);
+       // itemAdapter = new ChatRoomAdapter(data , this);
 
 
 //        recyclerView.setHasFixedSize(true);

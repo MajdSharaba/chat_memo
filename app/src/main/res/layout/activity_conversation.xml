@@ -15,7 +15,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/toolbar"
             android:background="@color/green_500"
             android:minHeight="?attr/actionBarSize"
@@ -23,7 +23,7 @@
             >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
             <ImageView
@@ -37,27 +37,27 @@
             </ImageView>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="41dp"
+                android:layout_height="41dp"
                 android:src="@mipmap/ic_launcher"
                 app:civ_border_color="@color/textColor"
                 android:layout_marginLeft="15dp"
                 app:civ_border_width="2dp" />
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
             <TextView
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:gravity="center_vertical"
+                android:layout_weight="0.5"
                 android:text="majd"
-                android:textAlignment="center"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textSize="17sp"
-                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:textColor="@color/textColor"
                 >
 
             </TextView>
@@ -66,19 +66,40 @@
                         android:id="@+id/state"
                         android:layout_width="wrap_content"
                         android:layout_height="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:visibility="gone"
                         android:text="majd"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="5dp"
-                        android:textSize="14sp"
-                        android:textColor="@android:color/white"
+                        android:textSize="10sp"
+                        android:textColor="@color/textColor"
 
                 />
 
                 </LinearLayout>
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_video_blue">
+
+                </ImageView>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:layout_gravity="center"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_call_blue">
+
+                </ImageView>
+
+
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_con"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
@@ -88,9 +109,11 @@
 
 
 
-
+            
 
         </androidx.appcompat.widget.Toolbar>
+
+
     </com.google.android.material.appbar.AppBarLayout>
 
 
@@ -110,49 +133,45 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
+            android:background="@color/background_bottom_navigation"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
-        <LinearLayout
-            android:id="@+id/liner_btn"
-            android:layout_weight="2"
-            android:layout_width="0dp"
-            android:background="@drawable/et_custom"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        <EditText
-            android:id="@+id/messageEdit"
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:background="@null"
-            android:fallbackLineSpacing="false"
-            android:hint="@string/type_message" />
             <ImageButton
                 android:id="@+id/btn_send_message_image"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="38dp"
                 android:layout_gravity="bottom"
                 android:layout_margin="5dp"
                 android:layout_weight="0.2"
                 android:background="@null"
-                android:src="@drawable/ic_select_image"
+                android:src="@drawable/ic_add_blue"
                 android:textColor="@color/background_material_light" />
 
 
-        </LinearLayout>
+
+        <EditText
+            android:id="@+id/messageEdit"
+            android:background="@drawable/et_custom"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="38dp"
+            android:layout_margin="5dp"
+            android:fallbackLineSpacing="false"
+            android:hint="@string/type_message" />
+
+
+
 
             <ImageButton
                 android:id="@+id/btn_send_message_text"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:layout_height="38dp"
                 android:layout_gravity="bottom"
                 android:layout_margin="5dp"
                 android:layout_weight="0.2"
-                android:background="@drawable/btx_custom"
+                android:background="@null"
                 android:src="@drawable/ic_arrow_send"
-                android:textColor="@color/background_material_light" />
+                />
         </LinearLayout>
 
         <ListView
@@ -161,7 +180,6 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
-
             android:layout_marginBottom="20dp"
             android:layout_above="@+id/liner"
             android:layout_marginTop="10dp"

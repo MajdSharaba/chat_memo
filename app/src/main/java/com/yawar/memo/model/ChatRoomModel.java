@@ -6,15 +6,17 @@ public class ChatRoomModel {
     public String reciverId;
     public String lastMessage;
     public String image;
+    public boolean isChecked;
 
 
-    public ChatRoomModel(String name,String senderId, String reciverId, String lastMessage, String image) {
+    public ChatRoomModel(String name,String senderId, String reciverId, String lastMessage, String image, boolean isChecked) {
 
         this.name = name;
         this.senderId = senderId;
         this.reciverId = reciverId;
         this.lastMessage = lastMessage;
         this.image = image;
+        this.isChecked = isChecked;
     }
 
     public String getName() {
@@ -58,4 +60,11 @@ public class ChatRoomModel {
     }
 
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,6 +15,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.MenuItem;
+import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yawar.memo.R;
 import com.yawar.memo.adapter.SearchAdapter;
 import com.yawar.memo.model.SearchRespone;
+import com.yawar.memo.utils.Globale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,20 +37,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity implements SearchAdapter.CallbackInterface {
+
     RecyclerView recyclerView;
     SearchView searchView;
     Toolbar toolbar;
     ArrayList<SearchRespone> searchResponeArrayList = new ArrayList<SearchRespone>();
     SearchAdapter searchAdapter;
     BottomNavigationView bottomNavigationView;
+    Globale globale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_search);
-        bottomNavigationView = findViewById(R.id.bottomNavigationView1);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setSelectedItemId(R.id.searchSn);
+        globale = new Globale();
         recyclerView = findViewById(R.id.recycler_view);
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Memo");
@@ -77,11 +86,22 @@ public class SearchActivity extends AppCompatActivity {
                         Intent inten = new Intent(SearchActivity.this, BasicActivity.class);
                         inten.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(inten);
+                        return true;
+
+
 
                     case R.id.searchSn:
 //                        Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
 //                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //                        startActivity(intent);
+                        return true;
+
+                    case R.id.profile:
+                        Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        return true;
+
 
 
                     case R.id.calls:
@@ -89,6 +109,11 @@ public class SearchActivity extends AppCompatActivity {
 //                        inten.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
 //                        startActivity(inten);
 
+                    case R.id.settings:
+                        intent = new Intent(SearchActivity.this, SettingsActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                        startActivity(intent);
+                        return true;
 
                 }
 
@@ -97,7 +122,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
     private void search(String query) {
-        String url = "http://192.168.1.10:8080/yawar_chat/APIS/search_for_user.php";
+        String url = globale.base_url+"/APIS/search_for_user.php";
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -127,14 +152,14 @@ public class SearchActivity extends AppCompatActivity {
                         String name = jsonObject.getString("first_name");
                         String secretNumber = jsonObject.getString("sn");
                         String image = jsonObject.getString("image");
-                        String imageUrl="";
-                        if(!image.isEmpty()){
-                            imageUrl = "http://192.168.1.10:8080/yawar_chat/uploads/profile/"+image;
-                        }
-                        else{
-                            imageUrl = "https://v5p7y9k6.stackpathcdn.com/wp-content/uploads/2018/03/11.jpg";
-                        }
-                        searchResponeArrayList.add(new SearchRespone(id,name,secretNumber,imageUrl,phone));
+//                        String imageUrl="";
+//                        if(!image.isEmpty()){
+//                            imageUrl = "http://192.168.1.10:8080/yawar_chat/uploads/profile/"+image;
+//                        }
+//                        else{
+//                            imageUrl = "https://v5p7y9k6.stackpathcdn.com/wp-content/uploads/2018/03/11.jpg";
+//                        }
+                        searchResponeArrayList.add(new SearchRespone(id,name,secretNumber,image,phone));
 //                        recyclerView.setLayoutManager(new LinearLayoutManager(ContactNumberActivity.this));
 //                        mainAdapter = new ContactNumberAdapter(ContactNumberActivity.this,sendContactNumberResponses);
 //                        recyclerView.setAdapter(mainAdapter);
@@ -198,5 +223,34 @@ public class SearchActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onHandleSelection(int position, SearchRespone searchRespone) {
+        Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+        contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
 
+        contactIntent
+                .putExtra(ContactsContract.Intents.Insert.NAME, searchRespone.getName())
+                .putExtra(ContactsContract.Intents.Insert.PHONE, searchRespone.getPhone());
+
+       startActivityForResult(contactIntent,1);
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        if (requestCode == 1)
+        {
+            if (resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Added Contact", Toast.LENGTH_SHORT).show();
+
+                searchAdapter.notifyDataSetChanged();
+                return;
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                searchAdapter.notifyDataSetChanged();
+
+                Toast.makeText(this, "Cancelled Added Contact", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+}

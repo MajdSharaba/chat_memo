@@ -24,6 +24,7 @@
         app:toolbarId="@+id/toolbar">
 
         <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/full_image"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -50,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@id/app_bar"
-        android:background="@color/green_700"
+        android:backgroundTint="@color/green_500"
         app:layout_anchorGravity="bottom|end"
         android:src="@drawable/ic_message" />
 

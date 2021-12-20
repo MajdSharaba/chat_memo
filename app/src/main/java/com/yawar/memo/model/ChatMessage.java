@@ -39,14 +39,18 @@ public class ChatMessage {
     private  String type;
     private String userId;
     private String dateTime;
+    private  String state;
+    private  String fileName;
 
-    public ChatMessage(String id, boolean isMe, String message, String userId, String dateTime,String type) {
+    public ChatMessage(String id, boolean isMe, String message, String userId, String dateTime,String type,String state,String fileName) {
         this.id = id;
         this.isMe = isMe;
         this.message = new SpannableString(message);
         this.userId = userId;
         this.dateTime = dateTime;
         this.type = type;
+        this.state = state;
+        this.fileName = fileName;
     }
 
     public ChatMessage() {
@@ -93,5 +97,21 @@ public class ChatMessage {
 
     public void setDate(String dateTime) {
         this.dateTime = dateTime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

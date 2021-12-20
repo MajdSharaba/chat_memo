@@ -47,8 +47,10 @@ public class ContactNumberAdapter extends RecyclerView.Adapter<ContactNumberAdap
         holder.tvName.setText(model.getName());
         holder.tvNumber.setText(model.getNumber());
         System.out.println(model.getImage());
+        if(!model.getImage().isEmpty()){
+            Glide.with(holder.imageView.getContext()).load("http://192.168.1.10:8080/yawar_chat/uploads/profile/"+model.getImage()).into(holder.imageView);}
 
-        Glide.with(holder.imageView.getContext()).load(model.getImage()).into(holder.imageView);
+       // Glide.with(holder.imageView.getContext()).load(model.getImage()).into(holder.imageView);
         if(model.getState().equals("false")){
             holder.button.setVisibility(View.VISIBLE);
 

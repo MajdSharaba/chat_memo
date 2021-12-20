@@ -11,12 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,10 +29,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.yawar.memo.GroupSelectorActivity;
 import com.yawar.memo.R;
 import com.yawar.memo.adapter.ContactNumberAdapter;
 import com.yawar.memo.model.ContactModel;
 import com.yawar.memo.model.SendContactNumberResponse;
+import com.yawar.memo.utils.Globale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +51,13 @@ public class ContactNumberActivity extends AppCompatActivity {
     ArrayList<ContactModel> arrayList = new ArrayList<ContactModel>();
     ArrayList<SendContactNumberResponse> sendContactNumberResponses = new ArrayList<SendContactNumberResponse>();
     ContactNumberAdapter mainAdapter;
+    Globale globale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_contact_number);
 //        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
 //        bottomNavigationView.setSelectedItemId(R.id.calls);
@@ -56,6 +65,7 @@ public class ContactNumberActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Memo");
         setSupportActionBar(toolbar);
+        globale = new Globale();
         searchView = findViewById(R.id.search_by_secret_number);
 
         CharSequence charSequence = searchView.getQuery();
@@ -73,6 +83,8 @@ public class ContactNumberActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+
 
 
 
@@ -108,6 +120,29 @@ public class ContactNumberActivity extends AppCompatActivity {
         ///////////////////////////////////
         checkpermission();
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.basic_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.group:
+                Intent intent = new Intent(ContactNumberActivity.this, GroupSelectorActivity.class);
+                startActivity(intent);
+
+                return true;
+            case R.id.item2:
+                Toast.makeText(getApplicationContext(),"Item 2 Selected",Toast.LENGTH_LONG).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
@@ -152,7 +187,7 @@ public class ContactNumberActivity extends AppCompatActivity {
     }
 
     private void sendContactNumber(ArrayList<ContactModel> arrayList) {
-        String url = "http://192.168.1.10:8080/yawar_chat/APIS/mycontact.php";
+        String url =globale.base_url+ "APIS/mycontact.php";
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -176,19 +211,19 @@ public class ContactNumberActivity extends AppCompatActivity {
                     for (int i = 0; i <= jsonArray.length()-1; i++) {
                      JSONObject jsonObject = jsonArray.getJSONObject(i);
                      System.out.println(jsonObject.getString("name"));
-
+                    String id = jsonObject.getString("id");
                     String name = jsonObject.getString("name");
                     String number = jsonObject.getString("number");
                     String image = jsonObject.getString("image");
-                    String imageUrl="";
-                    if(!image.isEmpty()){
-                        imageUrl = "http://192.168.1.10:8080/yawar_chat/uploads/profile/"+image;
-                    }
-                    else{
-                        imageUrl = "https://v5p7y9k6.stackpathcdn.com/wp-content/uploads/2018/03/11.jpg";
-                    }
+//                    String imageUrl="";
+//                    if(!image.isEmpty()){
+//                        imageUrl = "http://192.168.1.10:8080/yawar_chat/uploads/profile/"+image;
+//                    }
+//                    else{
+//                        imageUrl = "https://v5p7y9k6.stackpathcdn.com/wp-content/uploads/2018/03/11.jpg";
+//                    }
                     String state = jsonObject.getString("state");
-                        sendContactNumberResponses.add(new SendContactNumberResponse(name,number,imageUrl,state));
+                        sendContactNumberResponses.add(new SendContactNumberResponse(id,name,number,image,state));
 //                        recyclerView.setLayoutManager(new LinearLayoutManager(ContactNumberActivity.this));
 //                        mainAdapter = new ContactNumberAdapter(ContactNumberActivity.this,sendContactNumberResponses);
 //                        recyclerView.setAdapter(mainAdapter);
