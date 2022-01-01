@@ -5,9 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -15,13 +12,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.yawar.memo.adapter.ContactNumberAdapter;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.model.ChatRoomModel;
-import com.yawar.memo.model.SendContactNumberResponse;
 import com.yawar.memo.model.UserModel;
 import com.yawar.memo.utils.Globale;
-import com.yawar.memo.views.BasicActivity;
-import com.yawar.memo.views.ContactNumberActivity;
+import com.yawar.memo.views.IntroActivity;
 import com.yawar.memo.views.RegisterActivity;
 
 import org.json.JSONArray;
@@ -47,8 +42,9 @@ public class ServerApi {
    /// public void register(String firstName, String lastName, String email, String imageString) {
    public void register() {
         classSharedPreferences = new ClassSharedPreferences(context);
+        System.out.println( classSharedPreferences.getVerficationNumber()+"classSharedPreferences.getVerficationNumber()");
         // url to post our data
-        String url = globale.base_url+"APIS/signup.php";
+        String url = AllConstants.base_url+"APIS/signup.php";
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -84,6 +80,7 @@ public class ServerApi {
                 // storing our values in key and value pair.
                 Map<String, String> params = new HashMap<String, String>();
 
+
                 // on below line we are passing our key
                 // and value pair to our parameters.
                 params.put("phone", classSharedPreferences.getVerficationNumber());
@@ -100,7 +97,7 @@ public class ServerApi {
     public void CompleteRegister(String firstName, String lastName, String email, String imageString,String secretNumber,String userId) {
         classSharedPreferences = new ClassSharedPreferences(context);
         // url to post our data
-        String url = globale.base_url+"APIS/completesignup.php";
+        String url = AllConstants.base_url+"APIS/completesignup.php";
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -137,7 +134,7 @@ public class ServerApi {
 
                     UserModel userModel = new UserModel(user_id,first_name,last_name,email,number,secret_number,profile_image,status);
                     classSharedPreferences.setUser(userModel);
-                    Intent intent = new Intent(context, BasicActivity.class);
+                    Intent intent = new Intent(context, IntroActivity.class);
                     context.startActivity(intent);
 
                 } catch (JSONException e) {
@@ -182,7 +179,7 @@ public class ServerApi {
     public void updateProfile(String firstName, String lastName, String status, String imageString,String userId) {
         classSharedPreferences = new ClassSharedPreferences(context);
         // url to post our data
-        String url = globale.base_url+"APIS/updateprofile.php";
+        String url = AllConstants.base_url+"APIS/updateprofile.php";
         progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -219,7 +216,7 @@ public class ServerApi {
 
                     UserModel userModel = new UserModel(user_id,first_name,last_name,email,number,secret_number,profile_image,status);
                     classSharedPreferences.setUser(userModel);
-                    Intent intent = new Intent(context, BasicActivity.class);
+                    Intent intent = new Intent(context, IntroActivity.class);
                     context.startActivity(intent);
 
                 } catch (JSONException e) {
@@ -262,7 +259,7 @@ public class ServerApi {
     ///////////////////////////////////////
     public void createGroup(String name,String imageString,ArrayList<String> arrayList) {
 
-        String url =globale.base_url+ "APIS/addgroup.php";
+        String url =AllConstants.base_url+ "APIS/addgroup.php";
     ProgressDialog progressDialog = new ProgressDialog(context);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -279,7 +276,7 @@ public class ServerApi {
             try {
                 respObj = new JSONObject(response);
                 System.out.println(respObj);
-                Intent intent = new Intent(context, BasicActivity.class);
+                Intent intent = new Intent(context, IntroActivity.class);
                 context.startActivity(intent);
 
             } catch (JSONException e) {
@@ -322,65 +319,98 @@ public class ServerApi {
 }
     ////////////////////////////////////////
 
-//    public  List<ChatRoomModel> getChatRoom(RecyclerView recyclerView, ListItemClickListener listener) {
-//        final ProgressDialog progressDialog = new ProgressDialog(context);
+    public List<ChatRoomModel> GetData() {
+        List<ChatRoomModel> postList = new ArrayList<>();
+        classSharedPreferences = new ClassSharedPreferences(context);
+
+
+        UserModel userModel = classSharedPreferences.getUser();
+       String myId = userModel.getUserId();
+//        System.out.println(userModel.getUserId());
+//          progressDialog = new ProgressDialog(context);
 //        progressDialog.setMessage("Loading...");
 //        progressDialog.show();
-//        List<ChatRoomModel> postList =  new ArrayList<>();
-//        RequestQueue requestQueue = Volley.newRequestQueue(context);
-//        StringRequest request = new StringRequest(Request.Method.GET, "http://192.168.1.10:8080/yawar_chat/APIS/mychat.php?user_id=2", new Response.Listener<String>() {
-//
-//
-//            @Override
-//            public void onResponse(String response) {
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        StringRequest request = new StringRequest(Request.Method.GET, AllConstants.base_url+"APIS/mychat.php?user_id="+myId, new Response.Listener<String>() {
+
+
+            @Override
+            public void onResponse(String response) {
 //                progressDialog.dismiss();
-//
-////                System.out.println(response);
-//                try {
-//                    JSONObject respObj = new JSONObject(response);
-//                    System.out.println(respObj);
-//                    JSONArray jsonArray = (JSONArray) respObj.get("data");
-////                    JSONArray jsonArray = new JSONArray(respObj.getJSONArray("data"));
-//                    System.out.println(jsonArray);
-//
-//                    for (int i = 0; i < jsonArray.length()-1; i++) {
-//                        JSONObject jsonObject = jsonArray.getJSONObject(i);
-//                        System.out.println(jsonObject.getString("last_message"));
-//
+                try {
+                    JSONObject respObj = new JSONObject(response);
+                    System.out.println(respObj);
+                    JSONArray jsonArray = (JSONArray) respObj.get("data");
+//                    JSONArray jsonArray = new JSONArray(respObj.getJSONArray("data"));
+                    System.out.println(jsonArray);
+                    postList.clear();
+
+                    for (int i = 0; i <= jsonArray.length()-1; i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        System.out.println(jsonObject.getString("last_message"));
+                        String image =  jsonObject.getString("image");
+                       /// isArchived =jsonObject.getBoolean("archive");
+//                        String imageUrl="";
+//                        if(!image.isEmpty()){
+//                            imageUrl = globale.base_url+"/uploads/profile/"+image;
+//                        }
+//                        else{
+//                            imageUrl = "https://v5p7y9k6.stackpathcdn.com/wp-content/uploads/2018/03/11.jpg";
+//                        }
+
 //                        postList.add(new ChatRoomModel(
 //                                jsonObject.getString("username"),
 //                                jsonObject.getString("sender_id"),
 //                                jsonObject.getString("reciver_id"),
 //                                jsonObject.getString("last_message"),
-//                                "http://192.168.1.10:8080/yawar_chat/uploads/profile/"+jsonObject.getString("image"),
-//                                   false
+//                                image,
+//                                false
 ////                                "https://th.bing.com/th/id/OIP.2s7VxdmHEoDKji3gO_i-5QHaHa?pid=ImgDet&rs=1"
 //
 //                        ));
-////                       ChatRoomAdapter itemAdapter = new ChatRoomAdapter(postList,context, listener);
-//////                itemAdapter=new ChatRoomAdapter(getApplicationContext(),postList);
-////                        recyclerView.setAdapter(itemAdapter);
-////                        itemAdapter.notifyDataSetChanged();
-//                        Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
-//                        System.out.println("http://192.168.1.10:8080/yawar_chat/uploads/profile/"+jsonObject.getString("image"));
+                        System.out.println(AllConstants.base_url+"uploads/profile/"+jsonObject.getString("image"));
+                    }
+                    System.out.println("postList"+postList.size());
+
+//                    if(isArchived){
+//                        linerArchived.setVisibility(View.VISIBLE);
+//
+//
 //                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                    progressDialog.dismiss();
+//                    else {
+//                        linerArchived.setVisibility(View.GONE);
+//
+//                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                   // progressDialog.dismiss();
+                }
+//                if(isArchived){
+//                    linerArchived.setVisibility(View.VISIBLE);
 //                }
-//
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                progressDialog.dismiss();
-//                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        }) {
-//
-//        };
-//        requestQueue.add(request);
-//        return  postList;
-//    }
+                ///itemAdapter = new ChatRoomAdapter(postList, getApplicationContext(), listener);
+//                itemAdapter = new ChatRoomAdapter(postList, BasicActivity.this);
+//////                itemAdapter=new ChatRoomAdapter(getApplicationContext(),postList);
+//                recyclerView.setAdapter(itemAdapter);
+//                itemAdapter.notifyDataSetChanged();
+//                Toast.makeText(BasicActivity.this, "Success", Toast.LENGTH_SHORT).show();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+               // progressDialog.dismiss();
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+
+        };
+        requestQueue.add(request);
+        System.out.println("postList"+postList.size());
+        if(postList.size()>0){
+     return  postList;}
+        else {
+            return  postList;
+        }
+    }
 
 }

@@ -136,6 +136,13 @@
             android:background="@color/background_bottom_navigation"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/messageLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                android:orientation="horizontal"
+                android:visibility="visible">
             <ImageButton
                 android:id="@+id/btn_send_message_image"
                 android:layout_width="0dp"
@@ -162,19 +169,43 @@
 
 
 
+
+        </LinearLayout>
+            <com.devlomi.record_view.RecordView
+                android:id="@+id/recordView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.8"
+                android:visibility="gone"
+                app:slide_to_cancel_arrow="@drawable/recv_ic_arrow"
+                app:slide_to_cancel_arrow_color="@color/textColor"
+                app:slide_to_cancel_text="Slide to cancel" />
             <ImageButton
                 android:id="@+id/btn_send_message_text"
                 android:layout_width="0dp"
                 android:layout_height="38dp"
                 android:layout_gravity="bottom"
                 android:layout_margin="5dp"
+                android:visibility="gone"
                 android:layout_weight="0.2"
                 android:background="@null"
                 android:src="@drawable/ic_arrow_send"
                 />
+            <com.devlomi.record_view.RecordButton
+                android:id="@+id/recordButton"
+                android:layout_width="0dp"
+                android:layout_height="38dp"
+                android:layout_gravity="center|bottom"
+                android:layout_margin="5dp"
+                android:layout_weight=".2"
+                android:background="@null"
+                android:scaleType="center"
+                android:tint="#007DFF"
+                app:mic_icon="@drawable/ic_mic" />
+
         </LinearLayout>
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/messagesContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -187,6 +218,70 @@
             android:transcriptMode="alwaysScroll"
             android:stackFromBottom="true"
             android:divider="@null" />
+        <LinearLayout
+            android:id="@+id/dataLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/liner"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/picker_background"
+            android:padding="25dp"
+            android:visibility="invisible">
+
+
+
+            <LinearLayout
+                android:id="@+id/lytCameraPick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@drawable/ic_photo_camera_black_48dp"
+                    app:tint="@color/dialog_choose_icon_color" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/title_camera"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/dialog_choose_text_color" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/pickFile"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    app:srcCompat="@drawable/ic_link"
+                    app:tint="@color/dialog_choose_icon_color" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="File"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/dialog_choose_text_color" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
 
     </RelativeLayout>

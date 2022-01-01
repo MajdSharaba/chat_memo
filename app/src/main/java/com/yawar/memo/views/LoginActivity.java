@@ -30,6 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.yawar.memo.Api.AuthApi;
 import com.yawar.memo.Api.ClassSharedPreferences;
 import com.yawar.memo.R;
+import com.yawar.memo.fragment.ChatRoomFragment;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG ="Login" ;
@@ -172,7 +173,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     private void gotoProfile(){
-        Intent intent = new Intent(LoginActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(LoginActivity.this, ChatRoomFragment.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

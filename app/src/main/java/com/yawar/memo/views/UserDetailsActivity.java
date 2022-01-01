@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.bumptech.glide.Glide;
 import com.yawar.memo.R;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.model.UserModel;
 import com.yawar.memo.utils.Globale;
 
@@ -79,7 +80,7 @@ public class UserDetailsActivity extends AppCompatActivity {
 
 
     private void getUserInfo(String user_id) {
-        String url = globale.base_url+"APIS/getuserinfo.php";
+        String url = AllConstants.base_url+"APIS/getuserinfo.php";
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -113,7 +114,7 @@ public class UserDetailsActivity extends AppCompatActivity {
                     tvStatus.setText(status);
                     tvSpecialNumber.setText(secret_number);
                     if(!profile_image.isEmpty()){
-                    Glide.with(fullImage).load(profile_image).into(fullImage);}
+                    Glide.with(fullImage.getContext()).load(profile_image).into(fullImage);}
 
 
 

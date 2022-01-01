@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.yawar.memo.R;
+import com.yawar.memo.fragment.SearchFragment;
 import com.yawar.memo.model.SearchRespone;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.ArrayList;
 
     public class SearchAdapter extends RecyclerView.Adapter<com.yawar.memo.adapter.SearchAdapter.ViewHolders> {
         ///Initialize variable
-
+         SearchFragment searchFragment;
         Activity activity;
         ArrayList<SearchRespone> arrayList;
         private CallbackInterface mCallback;
@@ -39,15 +40,18 @@ import java.util.ArrayList;
              * @param searchRespone - the text to pass back
              */
             void onHandleSelection(int position, SearchRespone searchRespone);
+            void onClickItem(int position, SearchRespone searchRespone);
+
         }
 
 
         ///Create constructor
-        public SearchAdapter(Activity activity, ArrayList<SearchRespone> arrayList) {
+        public SearchAdapter(SearchFragment searchFragment,Activity activity, ArrayList<SearchRespone> arrayList) {
+            this.searchFragment = searchFragment;
             this.activity = activity;
             this.arrayList = arrayList;
             try{
-                mCallback = (CallbackInterface) activity;
+                mCallback = (CallbackInterface) searchFragment;
             }catch(ClassCastException ex){
                 //.. should log the error or throw and exception
             }
@@ -80,6 +84,14 @@ import java.util.ArrayList;
             if(!contactExists(model.getPhone())){
                 holder.button.setVisibility(View.VISIBLE);
             }
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(mCallback != null){
+                        mCallback.onClickItem(position, arrayList.get(position));
+                    }
+                }
+            });
             holder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

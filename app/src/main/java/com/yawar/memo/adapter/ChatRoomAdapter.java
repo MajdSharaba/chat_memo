@@ -1,8 +1,5 @@
 package com.yawar.memo.adapter;
 
-import android.app.Activity;
-import android.app.Notification;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,11 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.yawar.memo.R;
-import com.yawar.memo.model.ChatMessage;
+import com.yawar.memo.fragment.ChatRoomFragment;
 import com.yawar.memo.model.ChatRoomModel;
 import com.yawar.memo.views.UserDetailsActivity;
 
@@ -36,7 +34,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
     List<ChatRoomModel> listsearch = new ArrayList<ChatRoomModel>();
     List<ChatRoomModel> listsearch2= new ArrayList<ChatRoomModel>();
     public ChatRoomAdapter.CallbackInterfac mCallback;
-    Activity context;
+    ChatRoomFragment context;
 
     public interface CallbackInterfac {
 
@@ -53,12 +51,13 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
 
 
     //public ChatRoomAdapter(List<ChatRoomModel> data, Activity context,  ListItemClickListener mOnClickListener) {
-    public ChatRoomAdapter(List<ChatRoomModel> data, Activity context) {
+    public ChatRoomAdapter(List<ChatRoomModel> data, ChatRoomFragment context) {
         this.list = data;
         this.context = context;
         try {
             mCallback = (ChatRoomAdapter.CallbackInterfac) context;
         } catch (ClassCastException ex) {
+            System.out.println(ex.getMessage()+"bbbbbbbbbbbbbbbb");
             //.. should log the error or throw and exception
         }
         this.listsearch2.addAll(list);
@@ -90,9 +89,11 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  if (mCallback != null) {
+
+                if (mCallback != null) {
                     System.out.println("Llllllllllllllllll");
-                        mCallback.onHandleSelection(position, list.get(position));
+
+                    mCallback.onHandleSelection(position, list.get(position));
 
             }}
         });
@@ -130,7 +131,7 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
                 View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_user_image_layout, null);
                 ImageView photoView = mView.findViewById(R.id.imageView);
-                Glide.with(photoView).load(list.get(position).getImage()).into(photoView);
+                Glide.with(photoView.getContext()).load(list.get(position).getImage()).into(photoView);
                 mBuilder.setView(mView);
                 AlertDialog mDialog = mBuilder.create();
                 mDialog.show();

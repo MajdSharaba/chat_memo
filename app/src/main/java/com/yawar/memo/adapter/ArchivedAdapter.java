@@ -100,7 +100,7 @@ public class ArchivedAdapter extends RecyclerView.Adapter<ArchivedAdapter.View_H
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
                 View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_user_image_layout, null);
                 ImageView photoView = mView.findViewById(R.id.imageView);
-                Glide.with(photoView).load(list.get(position).getImage()).into(photoView);
+                Glide.with(photoView.getContext()).load(list.get(position).getImage()).into(photoView);
                 mBuilder.setView(mView);
                 AlertDialog mDialog = mBuilder.create();
                 mDialog.show();

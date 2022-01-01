@@ -1,4 +1,4 @@
-package com.yawar.memo;
+package com.yawar.memo.views;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,24 +29,20 @@ import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.common.data.DataHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
-import com.yawar.memo.adapter.ContactNumberAdapter;
+import com.yawar.memo.R;
 import com.yawar.memo.adapter.GroupSelectorAdapter;
-import com.yawar.memo.adapter.SearchAdapter;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.model.ContactModel;
 import com.yawar.memo.model.GroupSelectorRespone;
 import com.yawar.memo.model.SendContactNumberResponse;
 import com.yawar.memo.utils.Globale;
-import com.yawar.memo.views.BasicActivity;
-import com.yawar.memo.views.ContactNumberActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -218,7 +214,7 @@ public class GroupSelectorActivity extends AppCompatActivity implements GroupSel
     }
 
     private void sendContactNumber(ArrayList<ContactModel> arrayList) {
-        String url =globale.base_url+ "APIS/mycontact.php";
+        String url = AllConstants.base_url+ "APIS/mycontact.php";
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();

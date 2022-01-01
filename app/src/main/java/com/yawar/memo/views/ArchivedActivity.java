@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -26,7 +24,7 @@ import com.yawar.memo.Api.ClassSharedPreferences;
 import com.yawar.memo.Api.ServerApi;
 import com.yawar.memo.R;
 import com.yawar.memo.adapter.ArchivedAdapter;
-import com.yawar.memo.adapter.ChatRoomAdapter;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.model.ChatRoomModel;
 import com.yawar.memo.model.UserModel;
 import com.yawar.memo.utils.Globale;
@@ -39,8 +37,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapter.CallbackInterfac{
+import com.yawar.memo.utils.BaseApp;
+
+public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapter.CallbackInterfac, Observer {
 
     SwipeableRecyclerView recyclerView;
     List<ChatRoomModel> data;
@@ -54,6 +56,10 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
     UserModel userModel;
     Globale globale;
     ImageButton iBAddArchived;
+    String myId;
+    BaseApp myBase;
+
+
 
 
     @Override
@@ -68,6 +74,10 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
         setSupportActionBar(toolbar);
         recyclerView =  findViewById(R.id.recycler_view);
         globale = new Globale();
+        classSharedPreferences= new ClassSharedPreferences(this);
+        myId = classSharedPreferences.getUser().getUserId();
+        myBase = (BaseApp) getApplication();
+        myBase.getObserver().addObserver(this);
         recyclerView.setHasFixedSize(true);
 //        recyclerView.setAdapter(itemAdapter);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -87,6 +97,9 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
                 System.out.println(position);
                 removeFromArchived(archived.get(position));
                 archived.remove(position);
+                if(archived.size()<1){
+                    myBase.getObserver().setArchived(false);
+                }
                 itemAdapter.notifyDataSetChanged();}
         });
         GetData();
@@ -117,7 +130,7 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
         progressDialog.setMessage("Loading...");
         // progressDialog.show();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest request = new StringRequest(Request.Method.GET, globale.base_url+"APIS/my_archive_chat.php?user_id=1", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.GET, AllConstants.base_url+"APIS/my_archive_chat.php?user_id="+myId, new Response.Listener<String>() {
 
 
             @Override
@@ -148,11 +161,13 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
                                 jsonObject.getString("reciver_id"),
                                 jsonObject.getString("last_message"),
                                 image,
-                                false
+                                false,
+                                 "0",
+                                  "0"
 //                                "https://th.bing.com/th/id/OIP.2s7VxdmHEoDKji3gO_i-5QHaHa?pid=ImgDet&rs=1"
 
                         ));
-                        System.out.println(globale.base_url+"uploads/profile/"+jsonObject.getString("image"));
+                        System.out.println(AllConstants.base_url+"uploads/profile/"+jsonObject.getString("image"));
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -200,7 +215,7 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
         System.out.println(chatRoomModel.lastMessage);
         final ProgressDialog progressDialo = new ProgressDialog(this);
         // url to post our data
-        String url = "http://192.168.1.9:8000/deletearchive";
+        String url = "http://192.168.1.8:8000/deletearchive";
         progressDialo.setMessage("Uploading, please wait...");
         progressDialo.show();
         // creating a new variable for our request queue
@@ -213,6 +228,8 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
             public void onResponse(String response) {
                 progressDialo.dismiss();
                 System.out.println("Data added to API+"+response);
+                myBase.getObserver().addChatRoom(chatRoomModel);
+
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -230,7 +247,7 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
 
                 // on below line we are passing our key
                 // and value pair to our parameters.
-                params.put("my_id","1" );
+                params.put("my_id",myId );
                 params.put("your_id", chatRoomModel.reciverId);
 
                 // at last we are
@@ -243,4 +260,8 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
         queue.add(request);
     }
 
+    @Override
+    public void update(Observable observable, Object o) {
+
+    }
 }

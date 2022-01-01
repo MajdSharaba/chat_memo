@@ -4,12 +4,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -29,12 +26,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.yawar.memo.GroupSelectorActivity;
 import com.yawar.memo.R;
 import com.yawar.memo.adapter.ContactNumberAdapter;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.model.ContactModel;
 import com.yawar.memo.model.SendContactNumberResponse;
 import com.yawar.memo.utils.Globale;
+import com.yawar.memo.permissions.Permissions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,6 +49,7 @@ public class ContactNumberActivity extends AppCompatActivity {
     ArrayList<ContactModel> arrayList = new ArrayList<ContactModel>();
     ArrayList<SendContactNumberResponse> sendContactNumberResponses = new ArrayList<SendContactNumberResponse>();
     ContactNumberAdapter mainAdapter;
+    private Permissions permissions;
     Globale globale;
 
     @Override
@@ -66,6 +65,7 @@ public class ContactNumberActivity extends AppCompatActivity {
         toolbar.setTitle("Memo");
         setSupportActionBar(toolbar);
         globale = new Globale();
+        permissions = new Permissions();
         searchView = findViewById(R.id.search_by_secret_number);
 
         CharSequence charSequence = searchView.getQuery();
@@ -150,12 +150,16 @@ public class ContactNumberActivity extends AppCompatActivity {
 
     private void checkpermission() {
         ///check condition
-        if(ContextCompat.checkSelfPermission(ContactNumberActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(ContactNumberActivity.this,new String[]{Manifest.permission.READ_CONTACTS},100);
-        }
-        else {
+//        if(ContextCompat.checkSelfPermission(ContactNumberActivity.this, Manifest.permission.READ_CONTACTS)!= PackageManager.PERMISSION_GRANTED){
+//            ActivityCompat.requestPermissions(ContactNumberActivity.this,new String[]{Manifest.permission.READ_CONTACTS},100);
+//        }
+//        else {
+//            getContactList();
+//        }
+        if (permissions.isContactOk(this)) {
             getContactList();
         }
+        else permissions.requestContact(this);
     }
 
     private void getContactList() {
@@ -187,7 +191,7 @@ public class ContactNumberActivity extends AppCompatActivity {
     }
 
     private void sendContactNumber(ArrayList<ContactModel> arrayList) {
-        String url =globale.base_url+ "APIS/mycontact.php";
+        String url =AllConstants.base_url+ "APIS/mycontact.php";
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading, please wait...");
         progressDialog.show();
@@ -275,12 +279,19 @@ public class ContactNumberActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-            getContactList();
-        }
-        else {
-            Toast.makeText(ContactNumberActivity.this, "permission Denied",Toast.LENGTH_LONG);
-            checkpermission();
+//        if(requestCode == 100 && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+//            getContactList();
+//        }
+//        else {
+//            Toast.makeText(ContactNumberActivity.this, "permission Denied",Toast.LENGTH_LONG);
+//            checkpermission();
+//        }
+        switch (requestCode) {
+            case AllConstants.CONTACTS_REQUEST_CODE:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getContactList();
+                } else
+                    Toast.makeText(this, "Contact Permission denied", Toast.LENGTH_SHORT).show();
         }
     }
 //    private void search(String query) {

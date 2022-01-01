@@ -11,7 +11,8 @@ import android.util.Log;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.yawar.memo.views.BasicActivity;
+import com.yawar.memo.Api.ClassSharedPreferences;
+import com.yawar.memo.fragment.ChatRoomFragment;
 import com.yawar.memo.views.ConversationActivity;
 
 import org.json.JSONException;
@@ -20,15 +21,18 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import com.yawar.memo.utils.BaseApp;
 
 import static android.os.Process.THREAD_PRIORITY_BACKGROUND;
 
-public class SocketIOService extends Service implements SocketEventListener.Listener, HeartBeat.HeartBeatListener {
+public class SocketIOService extends Service implements SocketEventListener.Listener, HeartBeat.HeartBeatListener, Observer {
     public static final String KEY_BROADCAST_MESSAGE = "b_message";
     public static final int EVENT_TYPE_JOIN = 1, EVENT_TYPE_MESSAGE = 2, EVENT_TYPE_TYPING = 3,EVENT_TYPE_ENTER = 4,EVENT_TYPE_CHECK_CONNECT=5,EVENT_TYPE_ON_SEEN=6;
     private static final String EVENT_MESSAGE = "new message";
@@ -52,16 +56,24 @@ public class SocketIOService extends Service implements SocketEventListener.List
     private Boolean isConnected = true;
     private boolean mTyping;
     private Queue<Message> chatQueue;
-
+    String my_id;
+     ClassSharedPreferences classSharedPreferences;
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private HeartBeat heartBeat;
     private String room_id;
+    BaseApp myBase;
+
     private ConcurrentHashMap<String, SocketEventListener> listenersMap;
 
     //-------------------------------------------------------------------------------------------
     private IO.Options IOOption;
     public static final String EXTRA_EVENT_SEND_MESSAGE = "message_detection";
+
+    @Override
+    public void update(Observable observable, Object o) {
+
+    }
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -96,6 +108,8 @@ public class SocketIOService extends Service implements SocketEventListener.List
         IOOption = new IO.Options();
 //        IOOption.query = "public_key=" + new SessionManager(getApplicationContext()).getPublicKey();
         chatQueue = new LinkedList<>();
+        classSharedPreferences = new ClassSharedPreferences(this);
+        my_id = classSharedPreferences.getUser().getUserId();
         listenersMap = new ConcurrentHashMap<>();
         // background priority so CPU-intensive work will not disrupt our UI.
         HandlerThread thread = new HandlerThread(TAG + "Args",
@@ -104,10 +118,14 @@ public class SocketIOService extends Service implements SocketEventListener.List
         // Get the HandlerThread's Looper and use it for our Handler
         mServiceLooper = thread.getLooper();
         mServiceHandler = new ServiceHandler(mServiceLooper);
+        myBase = (BaseApp) getApplication();
+        myBase.getObserver().addObserver(this);
+
+
 
         try {
             System.out.println("connnectttttttttttttttttttt");
-            mSocket = IO.socket("http://192.168.1.10:3000");
+            mSocket = IO.socket("http://192.168.1.8:3000");
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -169,7 +187,7 @@ public class SocketIOService extends Service implements SocketEventListener.List
                 case EVENT_TYPE_JOIN:
                     System.out.println("EVENT_TYPE_JOIN");
 
-                    room_id = intent.getStringExtra(EXTRA_ROOM_ID);
+//                    room_id = intent.getStringExtra(EXTRA_ROOM_ID);
                     if (!mSocket.connected()) {
                         mSocket.connect();
                     }
@@ -259,7 +277,7 @@ public class SocketIOService extends Service implements SocketEventListener.List
 //        }
         JSONObject userId = new JSONObject();
         try {
-            userId.put("user_id",  2);
+            userId.put("user_id",  my_id);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -349,7 +367,7 @@ public class SocketIOService extends Service implements SocketEventListener.List
                 msg.arg1 = 1;
                 mServiceHandler.sendMessage(msg);
                 isConnected = true;
-                intent = new Intent(BasicActivity.ON_SOCKET_CONNECTION);
+                intent = new Intent(ChatRoomFragment.ON_SOCKET_CONNECTION);
                 intent.putExtra("status", true);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                 break;
@@ -359,7 +377,7 @@ public class SocketIOService extends Service implements SocketEventListener.List
                 msg = mServiceHandler.obtainMessage();
                 msg.arg1 = 2;
                 mServiceHandler.sendMessage(msg);
-                intent = new Intent(BasicActivity.ON_SOCKET_CONNECTION);
+                intent = new Intent(ChatRoomFragment.ON_SOCKET_CONNECTION);
                 intent.putExtra("status", false);
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
                 break;
@@ -378,6 +396,16 @@ public class SocketIOService extends Service implements SocketEventListener.List
 //                break;
             case EVENT_MESSAGE:
                 data = (JSONObject) args[0];
+                String text="";
+                String chatId="";
+                try {
+                    text = data.getString("message");
+                   chatId = data.getString("chat_id");
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
                 intent = new Intent(ConversationActivity.ON_MESSAGE_RECEIVED);
                 intent.putExtra("message", data.toString());
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
@@ -391,7 +419,7 @@ public class SocketIOService extends Service implements SocketEventListener.List
                 break;
             case EVENT_TYPING:
 //                data = (JSONObject) args[0];
-                System.out.println(CHECK_CONNECT+args[0].toString());
+                System.out.println(args[0].toString());
                 intent = new Intent(ConversationActivity.TYPING);
                 intent.putExtra("typing", args[0].toString());
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);

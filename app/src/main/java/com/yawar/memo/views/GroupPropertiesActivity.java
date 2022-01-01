@@ -1,4 +1,4 @@
-package com.yawar.memo;
+package com.yawar.memo.views;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -19,11 +19,10 @@ import android.widget.ImageView;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.yawar.memo.Api.ServerApi;
+import com.yawar.memo.R;
 import com.yawar.memo.adapter.ContactNumberAdapter;
-import com.yawar.memo.model.GroupSelectorRespone;
 import com.yawar.memo.model.SendContactNumberResponse;
 import com.yawar.memo.utils.Globale;
-import com.yawar.memo.views.ContactNumberActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
