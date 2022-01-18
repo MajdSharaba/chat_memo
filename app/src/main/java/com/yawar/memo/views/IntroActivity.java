@@ -68,7 +68,7 @@ public class IntroActivity extends AppCompatActivity implements Observer {
 //        createDirectory("memo");
 //        createDirectory("memo/send");
 //        createDirectory("memo/recive");
-        GetData();
+
 
 
     }
@@ -104,30 +104,24 @@ public class IntroActivity extends AppCompatActivity implements Observer {
                         String image =  jsonObject.getString("image");
                          isArchived =jsonObject.getBoolean("archive");
                          String username="mustafa";
-//                         if(!jsonObject.getString("username").equals(null)){
                             username=jsonObject.getString("username");
-//                         }
+                            String state = jsonObject.getString("state");
 
-//                        String imageUrl="";
-//                        if(!image.isEmpty()){
-//                            imageUrl = globale.base_url+"/uploads/profile/"+image;
-//                        }
-//                        else{
-//                            imageUrl = "https://v5p7y9k6.stackpathcdn.com/wp-content/uploads/2018/03/11.jpg";
-//                        }
 
                         postList.add(new ChatRoomModel(
                                 username,
                                 jsonObject.getString("sender_id"),
                                 jsonObject.getString("reciver_id"),
-                                jsonObject.getString("last_message"),
+//                                jsonObject.getString("last_message"),
+                                "mlmlml",
 
 
 
                                 image,
                                 false,
                                  jsonObject.getString("num_msg"),
-                                jsonObject.getString("id")
+                                jsonObject.getString("id"),
+                                state
 //                                "https://th.bing.com/th/id/OIP.2s7VxdmHEoDKji3gO_i-5QHaHa?pid=ImgDet&rs=1"
 
                         ));
@@ -140,7 +134,9 @@ public class IntroActivity extends AppCompatActivity implements Observer {
                     System.out.println("postList"+postList.size());
                     myBase.getObserver().setChatRoomModelList(postList);
                     Intent intent = new Intent(IntroActivity.this, DashBord.class);
+
                     startActivity(intent);
+                    IntroActivity.this.finish();
                     System.out.println("myBase.getObserver().getChatRoomModelList().size()"+myBase.getObserver().getChatRoomModelList().size());
 
 
@@ -189,6 +185,9 @@ public class IntroActivity extends AppCompatActivity implements Observer {
             createDirectory("memo/recive");
             createDirectory("memo/send/voiceRecord");
             createDirectory("memo/recive/voiceRecord");
+            createDirectory("memo/send/video");
+            createDirectory("memo/recive/video");
+            GetData();
 
 
         }
@@ -207,9 +206,7 @@ public class IntroActivity extends AppCompatActivity implements Observer {
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults)
     {
-        super.onRequestPermissionsResult(requestCode,
-                permissions,
-                grantResults);
+
 
 //        if (requestCode == STORAGE_PERMISSION_CODE) {
 //            System.out.println("Permission Granted");
@@ -229,9 +226,15 @@ public class IntroActivity extends AppCompatActivity implements Observer {
                     createDirectory("memo/recive");
                     createDirectory("memo/send/voiceRecord");
                     createDirectory("memo/recive/voiceRecord");
+                    createDirectory("memo/send/video");
+                    createDirectory("memo/recive/video");
+                    GetData();
                 } else
                     Toast.makeText(this, "Contact Permission denied", Toast.LENGTH_SHORT).show();
         }
+        super.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults);
     }
     void  createDirectory(String dName){
         File yourAppDir = new File(Environment.getExternalStorageDirectory()+File.separator+dName);

@@ -84,6 +84,10 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         // itemAdapter = new ChatRoomAdapter(postList, getApplicationContext(), listener);
+
+          for(ChatRoomModel chatRoomModel:myBase.getObserver().getChatRoomModelList()){
+        if(chatRoomModel.getState().equals("1"))
+            archived.add(chatRoomModel);}
         itemAdapter = new ArchivedAdapter(archived,this);
         recyclerView.setAdapter(itemAdapter);
         recyclerView.setListener(new SwipeLeftRightCallback.Listener() {
@@ -102,7 +106,7 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
                 }
                 itemAdapter.notifyDataSetChanged();}
         });
-        GetData();
+       // GetData();
 
         itemAdapter.notifyDataSetChanged();
         searchView = findViewById(R.id.search);
@@ -163,7 +167,8 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
                                 image,
                                 false,
                                  "0",
-                                  "0"
+                                  "0",
+                                    "9"
 //                                "https://th.bing.com/th/id/OIP.2s7VxdmHEoDKji3gO_i-5QHaHa?pid=ImgDet&rs=1"
 
                         ));
@@ -215,7 +220,7 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
         System.out.println(chatRoomModel.lastMessage);
         final ProgressDialog progressDialo = new ProgressDialog(this);
         // url to post our data
-        String url = "http://192.168.1.8:8000/deletearchive";
+        String url = "http://192.168.1.12:8000/deletearchive";
         progressDialo.setMessage("Uploading, please wait...");
         progressDialo.show();
         // creating a new variable for our request queue
@@ -228,7 +233,7 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
             public void onResponse(String response) {
                 progressDialo.dismiss();
                 System.out.println("Data added to API+"+response);
-                myBase.getObserver().addChatRoom(chatRoomModel);
+                myBase.getObserver().setState(chatRoomModel.chatId,"0");
 
 
             }
@@ -262,6 +267,10 @@ public class ArchivedActivity extends AppCompatActivity implements ArchivedAdapt
 
     @Override
     public void update(Observable observable, Object o) {
+        archived.clear();
+        for(ChatRoomModel chatRoomModel:myBase.getObserver().getChatRoomModelList()){
+            if(chatRoomModel.getState().equals("0"))
+                archived.add(chatRoomModel);}
 
     }
 }

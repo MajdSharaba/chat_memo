@@ -12,6 +12,7 @@ import android.util.Log;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.yawar.memo.Api.ClassSharedPreferences;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.fragment.ChatRoomFragment;
 import com.yawar.memo.views.ConversationActivity;
 
@@ -125,7 +126,7 @@ public class SocketIOService extends Service implements SocketEventListener.List
 
         try {
             System.out.println("connnectttttttttttttttttttt");
-            mSocket = IO.socket("http://192.168.1.8:3000");
+            mSocket = IO.socket(AllConstants.socket_url);
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }

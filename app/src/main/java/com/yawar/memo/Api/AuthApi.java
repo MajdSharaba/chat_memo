@@ -18,23 +18,29 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.yawar.memo.constant.AllConstants;
+import com.yawar.memo.utils.BaseApp;
 import com.yawar.memo.views.RegisterActivity;
 import com.yawar.memo.views.VerificationActivity;
 
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.MODE_PRIVATE;
 /////this class for Api with firebase
-public class AuthApi {
+public class AuthApi implements Observer {
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    BaseApp myBase;
 
 
 
-    public AuthApi(Context context) {
+
+    public AuthApi(Activity context) {
         this.context = context;
     }
 
-    Context context;
+    Activity context;
     ServerApi serverApi;
     private String verificationId;
 
@@ -69,6 +75,7 @@ public class AuthApi {
     public void sendVerificationCode(String number,Activity activity) {
         // this method is used for getting
         // OTP on user phone number.
+        System.out.println("problem"+number);
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
 
@@ -80,21 +87,22 @@ public class AuthApi {
         PhoneAuthProvider.verifyPhoneNumber(options);
 
     }
-//    private void resendVerificationCode(String phoneNumber,
-//                                        PhoneAuthProvider.ForceResendingToken token,Activity activity) {
-//        SharedPreferences prefs = context.getSharedPreferences("auth", MODE_PRIVATE);
-//
-//        String name = prefs.getString("verificationid",null);
-//        PhoneAuthOptions options =
-//                PhoneAuthOptions.newBuilder(mAuth)
-//                        .setPhoneNumber(phoneNumber)       // Phone number to verify
-//                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-//                        .setActivity(activity)                 // Activity (for callback binding)
-//                        .setCallbacks(mCallBack)          // OnVerificationStateChangedCallbacks
-//                        .setForceResendingToken(name)     // ForceResendingToken from callbacks
-//                        .build();
-//        PhoneAuthProvider.verifyPhoneNumber(options);
-//    }
+    public void resendVerificationCode(String phoneNumber,PhoneAuthProvider.ForceResendingToken forceResendingToken,
+                                        Activity activity) {
+        System.out.println(forceResendingToken);
+        SharedPreferences prefs = context.getSharedPreferences("auth", MODE_PRIVATE);
+
+        String name = prefs.getString("verificationid",null);
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phoneNumber)       // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(activity)                 // Activity (for callback binding)
+                        .setCallbacks(mCallBack)          // OnVerificationStateChangedCallbacks
+                        .setForceResendingToken(forceResendingToken)     // ForceResendingToken from callbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
     //"+9647510487448"
 ///7517863790
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks
@@ -118,7 +126,11 @@ public class AuthApi {
             // we are storing in our string
             // which we have alread y created.
             Log.d("nnmn", "onCodeSent:" + verificationid);
-
+//            AllConstants.forceResendingToken=forceResendingToken;
+            myBase = (BaseApp)  context.getApplication();
+            myBase.getForceResendingToken().addObserver(AuthApi.this);
+            myBase.getForceResendingToken().setForceResendingToken(forceResendingToken);
+            System.out.println(forceResendingToken);
 
             prefs.edit().putString("verificationid",verificationid).commit();
             Intent i = new Intent(context, VerificationActivity.class);
@@ -179,6 +191,10 @@ public class AuthApi {
     }
 
 
+    @Override
+    public void update(Observable observable, Object o) {
+
+    }
 }
 
 

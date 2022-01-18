@@ -80,23 +80,25 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
     public void onBindViewHolder(@NonNull ChatRoomAdapter.View_Holder holder, int position) {
 
         //Use the provided View Holder on the onCreateViewHolder method to populate the current row on the RecyclerView
-        holder.name.setText(list.get(position).name);
-        holder.lastMessage.setText(list.get(position).lastMessage);
-        //if(!list.get(position).getImage().isEmpty()){
-          // Glide.with(holder.imageView.getContext()).load("http://192.168.1.11:8080/yawar_chat/uploads/profile/"+list.get(position).getImage()).into(holder.imageView);}
-        //Glide.with(holder.imageView.getContext()).load(list.get(position).getImage()).into(holder.imageView);
-       // holder.imageView.setImageResource(list.get(position).imageId);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(list.get(position).state.equals("0")) {
+            holder.name.setText(list.get(position).name);
+            holder.lastMessage.setText(list.get(position).lastMessage);
+            //if(!list.get(position).getImage().isEmpty()){
+            // Glide.with(holder.imageView.getContext()).load("http://192.168.1.11:8080/yawar_chat/uploads/profile/"+list.get(position).getImage()).into(holder.imageView);}
+            //Glide.with(holder.imageView.getContext()).load(list.get(position).getImage()).into(holder.imageView);
+            // holder.imageView.setImageResource(list.get(position).imageId);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                if (mCallback != null) {
-                    System.out.println("Llllllllllllllllll");
+                    if (mCallback != null) {
+                        System.out.println("Llllllllllllllllll");
 
-                    mCallback.onHandleSelection(position, list.get(position));
+                        mCallback.onHandleSelection(position, list.get(position));
 
-            }}
-        });
+                    }
+                }
+            });
 //        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 //            @Override
 //            public boolean onLongClick(View view) {
@@ -124,34 +126,37 @@ public class ChatRoomAdapter extends RecyclerView.Adapter<ChatRoomAdapter.View_H
 //            }
 //        });
 
-        holder.imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+            holder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
-                View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_user_image_layout, null);
-                ImageView photoView = mView.findViewById(R.id.imageView);
-                Glide.with(photoView.getContext()).load(list.get(position).getImage()).into(photoView);
-                mBuilder.setView(mView);
-                AlertDialog mDialog = mBuilder.create();
-                mDialog.show();
-                ImageButton imageButton = mView.findViewById(R.id.btimg_info);
-                imageButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("user_id",list.get(position).getSenderId());
-                        intent.putExtras(bundle);
-                        view.getContext().startActivity(intent);
-                        Toast.makeText(view.getContext(),"Movie Name clicked", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext());
+                    View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_user_image_layout, null);
+                    ImageView photoView = mView.findViewById(R.id.imageView);
+                    Glide.with(photoView.getContext()).load(list.get(position).getImage()).into(photoView);
+                    mBuilder.setView(mView);
+                    AlertDialog mDialog = mBuilder.create();
+                    mDialog.show();
+                    ImageButton imageButton = mView.findViewById(R.id.btimg_info);
+                    imageButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(view.getContext(), UserDetailsActivity.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("user_id", list.get(position).getSenderId());
+                            intent.putExtras(bundle);
+                            view.getContext().startActivity(intent);
+                            Toast.makeText(view.getContext(), "Movie Name clicked", Toast.LENGTH_SHORT).show();
 
-                    }
-                });
+                        }
+                    });
 
-            }
-        });
-
+                }
+            });
+        }
+        else {
+            System.out.println("majd");
+        }
     }
 
     @Override

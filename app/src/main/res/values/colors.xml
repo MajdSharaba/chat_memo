@@ -22,6 +22,8 @@
 
     <color name="background_recive_message">#007DFF</color>
     <color name="background_chat_page">#EEFFCC</color>
+    <color name="background_onLong_click">#e6e6fa</color>
+
 
 
 

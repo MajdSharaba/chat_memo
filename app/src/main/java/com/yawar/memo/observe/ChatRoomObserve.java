@@ -48,4 +48,15 @@ public class ChatRoomObserve extends Observable  {
         setChanged();
         notifyObservers();
     }
+
+    public void setState(String chatId,String state) {
+//        state = state;
+        for(ChatRoomModel chatRoom:chatRoomModelList){
+            if(chatRoom.chatId.equals(chatId)){
+                chatRoom.setState(state);
+            }
+        }
+        setChanged();
+        notifyObservers();
+    }
 }

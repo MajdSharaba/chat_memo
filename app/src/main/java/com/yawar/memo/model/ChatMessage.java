@@ -34,7 +34,8 @@ public class ChatMessage {
 
     private String id;
     private boolean isMe;
-    public  Spannable message;
+//    public  Spannable message;
+    public String message;
     private String image;
     private  String type;
     private String userId;
@@ -42,10 +43,22 @@ public class ChatMessage {
     private  String state;
     private  String fileName;
 
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    public boolean isChecked;
+
+
     public ChatMessage(String id, boolean isMe, String message, String userId, String dateTime,String type,String state,String fileName) {
         this.id = id;
         this.isMe = isMe;
-        this.message = new SpannableString(message);
+        //this.message = new SpannableString(message);
+        this.message=message;
         this.userId = userId;
         this.dateTime = dateTime;
         this.type = type;
@@ -70,19 +83,23 @@ public class ChatMessage {
     public void setMe(boolean isMe) {
         this.isMe = isMe;
     }
-    public Spannable getMessage() {
+//    public Spannable getMessage() {
+//        return message;
+//    }
+    public  String getMessage(){
         return message;
     }
     public void setMessage(String message) {
 
-        this.message=new SpannableString(message);
-
-    }
-    public void setMessage(Spannable message) {
-
+        //this.message=new SpannableString(message);
         this.message=message;
 
     }
+//    public void setMessage(Spannable message) {
+//
+//        this.message=message;
+//
+//    }
     public String getUserId() {
         return userId;
     }

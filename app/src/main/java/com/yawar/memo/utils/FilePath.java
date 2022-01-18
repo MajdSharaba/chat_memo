@@ -22,6 +22,7 @@ public class FilePath {
 
         // check here to KITKAT or new version
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        System.out.println(uri+"uriiiiiiiiiiiiiiiiiiii");
 
         // DocumentProvider
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {

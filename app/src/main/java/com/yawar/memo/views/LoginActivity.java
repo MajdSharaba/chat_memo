@@ -32,7 +32,10 @@ import com.yawar.memo.Api.ClassSharedPreferences;
 import com.yawar.memo.R;
 import com.yawar.memo.fragment.ChatRoomFragment;
 
-public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
+import java.util.Observable;
+import java.util.Observer;
+
+public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, Observer {
     private static final String TAG ="Login" ;
     Button sendBtn;
     SignInButton googleBtn;
@@ -198,5 +201,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+
     }
 }

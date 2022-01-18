@@ -1,6 +1,7 @@
 package com.yawar.memo.views;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
@@ -35,6 +36,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.WindowManager;
@@ -42,9 +44,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -59,7 +63,10 @@ import com.android.volley.toolbox.Volley;
 import com.devlomi.record_view.OnRecordListener;
 import com.devlomi.record_view.RecordButton;
 import com.devlomi.record_view.RecordView;
+
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.gson.JsonObject;
+import com.yawar.memo.Api.ClassSharedPreferences;
 import com.yawar.memo.BuildConfig;
 import com.yawar.memo.R;
 import com.yawar.memo.adapter.ChatAdapter;
@@ -105,8 +112,12 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     private RecyclerView messagesContainer;
     private ImageButton sendMessageBtn;
     private ImageButton sendImageBtn;
+    private ImageButton deletImageBtn;
     private ChatAdapter adapter;
     LinearLayout view;
+    int IMAGE_PICKER_SELECT =600;
+    ProgressDialog mProgressDialog;
+
     boolean viewVisability = false;
     //    private String senderId;
 //    private String reciverId;
@@ -114,7 +125,11 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     private String imageUrl;
     Bitmap bitmap;
     String imageString;
+    MediaController mediaControls;
+
+
     String audioPath,audioName;
+    String lastSeen="";
     private static final int REQUEST_PERMISSIONS = 100;
     private static final int PICK_IMAGE_REQUEST = 1;
     private String filePath;
@@ -126,18 +141,30 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     ArrayList<String> returnValue = new ArrayList<>();
     private boolean isCoonect;
     private ArrayList<ChatMessage> chatHistory;
+    private ArrayList<ChatMessage> selectedMessage=new ArrayList<>();
+    private ArrayList<JSONObject> unSendMessage=new ArrayList<>();
+    private ArrayList<String> deleteMessage=new ArrayList<>();
+
+
+
+
     SearchView searchView;
     private Boolean hasConnection = false;
     private Socket socket;
     private Timer timer = new Timer();
     private final long DELAY = 1000;
-    String user_id = "2";
+    String user_id = "8";
     String anthor_user_id = "9";
     private Permissions permissions;
     private MediaRecorder mediaRecorder;
     RecordView recordView;
     RecordButton recordButton;
     LinearLayout messageLayout;
+    LinearLayout personInformationLiner;
+    LinearLayout toolsLiner;
+    ClassSharedPreferences classSharedPreferences;
+
+
 
 
     public static final String CHEK = "ConversationActivity.CHECK_CONNECT";
@@ -148,8 +175,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     String filepath = "";
 
 
-    private String upload_Voice_URL = "http://192.168.1.13:3000/uploadAudio";
-    private String upload_file_URL = "http://192.168.1.13:3000/uploadFile";
+
 
     private RequestQueue rQueue;
     private ArrayList<HashMap<String, String>> arraylist;
@@ -177,14 +203,28 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         @Override
         public void onReceive(Context context, Intent intent) {
             String check = intent.getExtras().getString("check");
+            JSONObject checkObject = null;
+            String checkConnect= "false";
+
+            try {
+                checkObject = new JSONObject(check);
+                checkConnect =  checkObject.getString("is_connect");
+                lastSeen = checkObject.getString("last_seen");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
             System.out.println(check + "usernnnnnnnnnnnnnnnnnnnnnnn");
-            if (check.equals("true")) {
+            if (checkConnect.equals("true")) {
                 isCoonect = true;
                 tv_state.setText("متصل الأن");
                 tv_state.setVisibility(View.VISIBLE);
-            } else if (check.equals("false")) {
+            } else if (checkConnect.equals("false")) {
                 isCoonect = false;
-                tv_state.setVisibility(View.GONE);
+                tv_state.setText(lastSeen) ;
+                tv_state.setVisibility(View.VISIBLE);
+
+//                tv_state.setVisibility(View.GONE);
             }
         }
     };
@@ -204,7 +244,10 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                     } else if (isCoonect) {
                         tv_state.setText("متصل الأن");
                     } else {
-                        tv_state.setVisibility(View.GONE);
+                        tv_state.setText(lastSeen);
+
+
+//                        tv_state.setVisibility(View.GONE);
                     }
 
                 }
@@ -241,7 +284,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                         type = message.getString("message_type");
                         state = message.getString("state");
                         senderId = message.getString("sender_id");
-                        id = message.getString("id");
+                        id = message.getString("message_id");
                         reciverId = message.getString("reciver_id");
 //                        fileName = message.getString("orginalName");
 
@@ -252,39 +295,108 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
                     System.out.println(senderId + "sender_id+majjjjjjjjjjjd" + fileName);
                     if (senderId.equals(user_id)) {
+                        System.out.println("state.equals(\"0000000\")=========================="+user_id+""+senderId+""+state);
 //                        Toast.makeText(ConversationActivity.this,args[0].toString(),Toast.LENGTH_LONG).show();
 
 
-                        for (int i = 0; i < adapter.chatMessages.size(); i++) {
+                        for (int i = adapter.chatMessages.size()-1; i > 0; i--) {
                             if (state.equals("3")) {
-//                                if( adapter.chatMessages.get(i).getState().equals("0")){
+                                System.out.println("state.equals(\"3\")==========================");
+
+                                if( adapter.chatMessages.get(i).getState().equals("3")){
+                                    System.out.println(i+"===============");
+
+                                    break;
+                                }
                                 adapter.chatMessages.get(i).setState(state);
 
 //                                }
 
+//                            } else if (state.equals("2")) {
+//                                if (adapter.chatMessages.get(i).getState().equals("1") || adapter.chatMessages.get(i).getState().equals("0")) {
+//                                    adapter.chatMessages.get(i).setState(state);
+//                                    adapter.chatMessages.get(i).setId(id);
+//                                    System.out.println(adapter.chatMessages.get(i).message);
+//                                }
+//                                else{
+//                                    break;
+//                                }
                             } else if (state.equals("2")) {
-                                if (adapter.chatMessages.get(i).getState().equals("1") || adapter.chatMessages.get(i).getState().equals("0")) {
+                                System.out.println("state.equals(\"2\")==========================");
+
+                                if (adapter.chatMessages.get(i).getId().equals(id)) {
                                     adapter.chatMessages.get(i).setState(state);
+//                                    adapter.chatMessages.get(i).setId(id);
                                     System.out.println(adapter.chatMessages.get(i).message);
-                                }
+                                }}
+                                else if (state.equals("1")) {
+                                   /// System.out.println(adapter.chatMessages.get(i).getId()+"xxxx"+id);
 
 
-                            } else if (state.equals("1")) {
-                                if (adapter.chatMessages.get(i).getState().equals("0")) {
-                                    adapter.chatMessages.get(i).setState(state);
-                                }
-                            }
+                                    if (adapter.chatMessages.get(i).getId().equals(id)) {
+                                        System.out.println("majdddddddddddd"+unSendMessage.size());
+                                        adapter.chatMessages.get(i).setState(state);
+//
+//                                        adapter.chatMessages.get(adapter.chatMessages.size()-1).setState(state);
+//                                        adapter.chatMessages.get(adapter.chatMessages.size()-1).setId(id);
+//                                        for (JSONObject  object:
+//                                                unSendMessage) {
+                                           for(i=0;i<unSendMessage.size();i++){
+                                            try {
+                                                if(unSendMessage.get(i).getString("message_id").equals(id))
+
+                                                unSendMessage.remove(unSendMessage.get(i));
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
+                                            }
+
+                                        }
+                                        classSharedPreferences.setList("list",unSendMessage);
+                                        break;
+                                    }
+
+
+
+
+                            } else break;
+//                                if (state.equals("1")) {
+//                                unSendMessage.remove(0);
+//                                classSharedPreferences.setList("list",unSendMessage);
+//
+//                                if (adapter.chatMessages.get(i).getState().equals("0")) {
+//                                    System.out.println("majdddddddddddd");
+//                                    adapter.chatMessages.get(i).setState(state);
+//                                    adapter.chatMessages.get(i).setId(id);
+////                                    unSendMessage.remove(1);
+////                                    classSharedPreferences.setList("list",unSendMessage);
+//                                }
+//                                else {
+//                                    break;
+//                                }
+//                            }
 
 
                         }
+//                        if (state.equals("1")) {
+//
+//
+//                                if (adapter.chatMessages.get(adapter.chatMessages.size()-1).getState().equals("0")) {
+//                                    System.out.println("majdddddddddddd");
+//                                    adapter.chatMessages.get(adapter.chatMessages.size()-1).setState(state);
+//                                    adapter.chatMessages.get(adapter.chatMessages.size()-1).setId(id);
+////                                    unSendMessage.remove(0);
+//                                    classSharedPreferences.setList("list",unSendMessage);
+//                                }
+//
+//                            }
+
                         adapter.notifyDataSetChanged();
                     } else {
                         JSONObject jsonObject = new JSONObject();
 
 
                         try {
-                            jsonObject.put("id", id);
-
+                            jsonObject.put("message_id", id);
                             jsonObject.put("sender_id", senderId);
                             jsonObject.put("reciver_id", reciverId);
                             jsonObject.put("message", text);
@@ -300,10 +412,10 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
 
                         ChatMessage chatMessage = new ChatMessage();
-                        chatMessage.setId("122");
+                    chatMessage.setId(id);
                         if (type.equals("text")) {
                             chatMessage.setMessage(text);
-                        } else if (type.equals("file")||type.equals("voice")) {
+                        } else if (type.equals("file")||type.equals("voice")||type.equals("video")) {
                             chatMessage.setMessage(text);
                             try {
                                 chatMessage.setFileName(message.getString("orginalName"));
@@ -443,7 +555,6 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
 
     private void initViews() {
-//
         Bundle bundle = getIntent().getExtras();
         user_id = bundle.getString("sender_id","1");
         anthor_user_id = bundle.getString("reciver_id","2");
@@ -472,12 +583,24 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         fileLiner = findViewById(R.id.pickFile);
         permissions = new Permissions();
         messageLayout = findViewById(R.id.messageLayout);
+        personInformationLiner = findViewById(R.id.person_information_liner);
+        toolsLiner = findViewById(R.id.tools_liner_layout);
+
 
         recordView = (RecordView) findViewById(R.id.recordView);
         recordButton = (RecordButton) findViewById(R.id.recordButton);
+        deletImageBtn = findViewById(R.id.image_button_delete);
         recordButton.setRecordView(recordView);
 
         recordButton.setListenForRecord(false);
+        deletImageBtn = findViewById(R.id.image_button_delete);
+        classSharedPreferences = new ClassSharedPreferences(this);
+
+        if(classSharedPreferences.getList()!=null){
+            unSendMessage = classSharedPreferences.getList();
+
+        }
+
 
 
 ///// form get message history
@@ -538,7 +661,8 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                // MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.song);
 
                 if (!viewVisability)
-                    showLayout();
+                {System.out.println("show dialog");
+                    showLayout();}
                 else
                     hideLayout();
             }
@@ -549,8 +673,13 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         sendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String message_id=System.currentTimeMillis()+"_"+user_id;
+                System.out.println(System.currentTimeMillis()+"_--"+user_id);
 
+                if(classSharedPreferences.getList()!=null){
+                    unSendMessage = classSharedPreferences.getList();
 
+                }
                 String messageText = messageET.getText().toString();
 
                 if (TextUtils.isEmpty(messageText)) {
@@ -563,20 +692,40 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                     jsonObject.put("message", messageText);
                     jsonObject.put("message_type", "text");
                     jsonObject.put("state", "0");
+                    jsonObject.put("message_id",message_id);
                     jsonObject.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setId("122");//dummy
+                chatMessage.setId(message_id);//dummy
                 chatMessage.setMessage(messageText);
                 chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
                 chatMessage.setMe(true);
                 chatMessage.setType("text");
                 chatMessage.setState("0");
+                chatMessage.setChecked(false);
+                chatMessage.setId(message_id);
                 messageET.setText("");
                 displayMessage(chatMessage);
-                newMeesage(jsonObject);
+                unSendMessage.clear();
+
+                unSendMessage.add(jsonObject);
+//              unSendMessage.clear();
+
+
+
+
+                classSharedPreferences.setList("list",unSendMessage);
+                System.out.println(unSendMessage.size()+"sizeeeeeeeeeeeeeeee");
+                for (JSONObject  message:
+                     unSendMessage) {
+
+                    newMeesage(message);
+
+                }
+
+//                newMeesage(jsonObject);
             }
         });
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -595,12 +744,16 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         imageLiner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("image");
-                ImagePicker.with(ConversationActivity.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
+                hideLayout();
+//                System.out.println("image");
+//                ImagePicker.with(ConversationActivity.this)
+//                        .crop()                    //Crop image(Optional), Check Customization for more option
+//                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                        .start();
+                Intent pickIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                pickIntent.setType("image/* video/*");
+                startActivityForResult(pickIntent,IMAGE_PICKER_SELECT);
             }
         });
 
@@ -609,6 +762,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         fileLiner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                hideLayout();
                 System.out.println("file");
                 askPermissionAndBrowseFile();
 
@@ -717,8 +871,71 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                 messageLayout.setVisibility(View.VISIBLE);
             }
         });
+        deletImageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteMessage(deleteMessage);
+
+//                System.out.println(selectedMessage.get(0).getMessage()+"kkkkk");
+            }
+        });
+
 
     }
+
+    private void deleteMessage(ArrayList<String> chatMessage) {
+        final ProgressDialog progressDialo = new ProgressDialog(this);
+        JSONArray jsonArray = new JSONArray(deleteMessage);
+       ;
+        progressDialo.setMessage("Uploading, please wait...");
+        progressDialo.show();
+        // creating a new variable for our request queue
+        RequestQueue queue = Volley.newRequestQueue(this);
+
+        StringRequest request = new StringRequest(Request.Method.POST, AllConstants.delete_message, new com.android.volley.Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                progressDialo.dismiss();
+                System.out.println("Data added to API+"+response);
+                for(ChatMessage message:selectedMessage){
+                adapter.chatMessages.remove( message);}
+                selectedMessage.clear();
+                deleteMessage.clear();
+//                System.out.println(chatMessage.getMessage()+chatMessage.getId());
+                adapter.notifyDataSetChanged();
+                toolsLiner.setVisibility(View.GONE);
+                personInformationLiner.setVisibility(View.VISIBLE);
+
+
+            }
+        }, new com.android.volley.Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // method to handle errors.
+                Toast.makeText(ConversationActivity.this, "Fail to get response = " + error, Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // below line we are creating a map for
+                // storing our values in key and value pair.
+                Map<String, String> params = new HashMap<String, String>();
+
+                // on below line we are passing our key
+                // and value pair to our parameters.
+                params.put("data", jsonArray.toString());
+
+                // at last we are
+                // returning our params.
+                return params;
+            }
+        };
+        // below line is to make
+        // a json object request.
+        queue.add(request);
+    }
+
+    ///// End initialAction
     private void setUpRecording() {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
@@ -831,11 +1048,13 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     }
 
     private void hideLayout() {
-
+        System.out.println("hideLayout");
         float radius = Math.max(view.getWidth(), view.getHeight());
         Animator animator = ViewAnimationUtils.createCircularReveal(view, view.getLeft(), view.getTop(), radius * 2, 0);
         animator.setDuration(800);
         viewVisability = false;
+        view.setVisibility(View.INVISIBLE);
+
 
         animator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -846,21 +1065,27 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
             @Override
             public void onAnimationEnd(Animator animation) {
                 view.setVisibility(View.INVISIBLE);
+                System.out.println("View.INVISIBLE)");
                 viewVisability = false;
 
             }
 
             @Override
             public void onAnimationCancel(Animator animation) {
+                System.out.println("onAnimationCancel");
+
 
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
+                System.out.println("onAnimationCancel");
 
             }
         });
-        animator.start();
+
+
+
     }
 
 //    @Override
@@ -878,7 +1103,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
             public void run() {
                 // Select the last row so it will scroll into view...
                 if(adapter.getItemCount()>0){
-                messagesContainer.smoothScrollToPosition(adapter.getItemCount()-1);}
+                messagesContainer.scrollToPosition(adapter.getItemCount()-1);}
 
             }
         });
@@ -894,30 +1119,35 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         progressDialog.setMessage("Loading...");
         progressDialog.show();
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        StringRequest request = new StringRequest(Request.Method.POST, "http://192.168.1.8:8000/messagesbyusers", new Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, AllConstants.load_chat_message, new Response.Listener<String>() {
 
 
             @Override
             public void onResponse(String response) {
                 progressDialog.dismiss();
-              System.out.println(response);
+//              System.out.println(response);
                 try {
                     JSONArray jsonArray = new JSONArray(response);
 
 
+
                     for (int i = 0; i < jsonArray.length(); i++) {
+
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         System.out.println(jsonObject);
                         ChatMessage chatMessage = new ChatMessage();
-                        chatMessage.setUserId(jsonObject.getString("id"));
+                        chatMessage.setUserId(jsonObject.getString("sender_id"));
                         chatMessage.setState(jsonObject.getString("state"));
-                        if(jsonObject.getString("message_type").equals("file")||jsonObject.getString("message_type").equals("voice")){
-                        chatMessage.setFileName(jsonObject.getString("orginalName"));}
-
-
-
-                        chatMessage.setId(jsonObject.getString("sender_id"));
                         chatMessage.setMe(jsonObject.getString("sender_id").equals(user_id));
+                        if(jsonObject.getString("message_type").equals("file")||jsonObject.getString("message_type").equals("voice")||jsonObject.getString("message_type").equals("video")){
+                        chatMessage.setFileName(jsonObject.getString("orginalName"));}
+//                            chatMessage.setFileName("orginalName");}
+
+
+
+
+                        chatMessage.setId(jsonObject.getString("message_id"));
+                        chatMessage.setChecked(false);
                         if(!jsonObject.getString("message_type").equals("image")){
                         chatMessage.setMessage(jsonObject.getString("message"));}
                         else{
@@ -929,7 +1159,34 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
 
 
+
                     }
+
+//                    for (JSONObject  jsonObject:
+//                            unSendMessage) {
+//
+//                        ChatMessage chatMessage = new ChatMessage();
+//                        chatMessage.setUserId(jsonObject.getString("sender_id"));
+//                        chatMessage.setState(jsonObject.getString("state"));
+//                        if(jsonObject.getString("message_type").equals("file")||jsonObject.getString("message_type").equals("voice")){
+//                            chatMessage.setFileName(jsonObject.getString("orginalName"));}
+//
+//
+//
+//                        chatMessage.setId(jsonObject.getString("message_id"));
+//                        chatMessage.setChecked(false);
+//                        chatMessage.setMe(jsonObject.getString("sender_id").equals(user_id));
+//                        System.out.println(jsonObject.getString("sender_id")+""+user_id+"knjkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+//                        if(!jsonObject.getString("message_type").equals("image")){
+//                            chatMessage.setMessage(jsonObject.getString("message"));}
+//                        else{
+//                            chatMessage.setImage(jsonObject.getString("message"));
+//                        }
+//                        chatMessage.setType(jsonObject.getString("message_type"));
+//                        chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+//                        chatHistory.add(chatMessage);
+//                        newMeesage(jsonObject);
+//                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                     progressDialog.dismiss();
@@ -938,6 +1195,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                 adapter.add(chatHistory);
                 adapter.notifyDataSetChanged();
                 scroll();
+
 
 
             }
@@ -974,6 +1232,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        String message_id=System.currentTimeMillis()+"_"+user_id;
 
 /////////////////////////////
 //        if (resultCode == Activity.RESULT_OK) {
@@ -1092,62 +1351,101 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         else{
                     if (resultCode == Activity.RESULT_OK) {
 //
-            Uri imageUrl = data.getData();
-            String selectedFilePath = FilePath.getPath(this,imageUrl);
+                        Uri selectedMediaUri = data.getData();
+                        if (selectedMediaUri.toString().contains("image")) {
+                            hideLayout();
 
-                if(selectedFilePath != null && !selectedFilePath.equals("")){
-                   // tvFileName.setText(selectedFilePath);
-                    System.out.println(selectedFilePath+"mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
-            JSONObject jsonObjec = new JSONObject();
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUrl);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                            System.out.println("this is image");
 
-            if(bitmap!=null){
-                bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
-                byte[] imageBytes = baos.toByteArray();
-                imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-            }
 
-            try {
-                    jsonObjec.put("sender_id",user_id);
-                    jsonObjec.put("reciver_id", anthor_user_id);
-                    jsonObjec.put("message",imageString );
-                    jsonObjec.put("state","0");
+                            String selectedFilePath = FilePath.getPath(this, selectedMediaUri);
 
-                jsonObjec.put("message_type","image");
-                    jsonObjec.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                            if (selectedFilePath != null && !selectedFilePath.equals("")) {
+                                // tvFileName.setText(selectedFilePath);
+                                System.out.println(selectedFilePath + "mmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
+                                JSONObject jsonObjec = new JSONObject();
+                                try {
+                                    bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), selectedMediaUri);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setId("122");//dummy
-                chatMessage.setImage(String.valueOf(imageUrl));
-                chatMessage.setType("image");
-                    chatMessage.setState("0");
+                                if (bitmap != null) {
+                                    bitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
+                                    byte[] imageBytes = baos.toByteArray();
+                                    imageString = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+                                }
 
-                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-                chatMessage.setMe(true);
-                displayMessage(chatMessage);
+                                try {
+                                    jsonObjec.put("sender_id", user_id);
+                                    jsonObjec.put("reciver_id", anthor_user_id);
+                                    jsonObjec.put("message", imageString);
+                                    jsonObjec.put("state", "0");
+
+                                    jsonObjec.put("message_type", "image");
+                                    jsonObjec.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                                ChatMessage chatMessage = new ChatMessage();
+                                chatMessage.setImage(String.valueOf(selectedMediaUri));
+                                chatMessage.setType("image");
+                                chatMessage.setState("0");
+                                chatMessage.setId(message_id);
+
+                                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                                chatMessage.setMe(true);
+                                displayMessage(chatMessage);
 //                socket.emit("new message", jsonObjec);
-                    ///newMeesage(jsonObjec);
+                                ///newMeesage(jsonObjec);
 
-        }
+                            }
 
-    }
+                        }
+                     else  if (selectedMediaUri.toString().contains("video")) {
 
+                            String uriString = selectedMediaUri.toString();
+                            File myFile = new File(uriString);
+
+                            String path = myFile.getAbsolutePath();
+
+                            copyFileOrDirectory(FileUtil.getPath(this,selectedMediaUri),Environment.getExternalStoragePublicDirectory("memo/send/video").getAbsolutePath());
+
+                            String displayName = null;
+
+                            if (uriString.startsWith("content://")) {
+                                Cursor cursor = null;
+                                try {
+                                    cursor = this.getContentResolver().query(selectedMediaUri, null, null, null, null);
+                                    if (cursor != null && cursor.moveToFirst()) {
+                                        displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                                        Log.d("nameeeee>>>>  ", displayName);
+
+                                        uploadVideo(displayName, selectedMediaUri);
+                                    }
+                                } finally {
+                                    cursor.close();
+                                }
+                            } else if (uriString.startsWith("file://")) {
+                                displayName = myFile.getName();
+                                Log.d("nameeeee>>>>  ", displayName);
+                            }
+
+//
+
+                    }
+                    }
         }
 
     }
     //// for upload file to server
     private void uploadPDF(final String pdfname, Uri pdffile) {
+        String message_id =  System.currentTimeMillis()+"_"+user_id;
 
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setId("122");//dummy
+        chatMessage.setId(message_id);//dummy
         chatMessage.setMessage(pdffile.toString());
         chatMessage.setFileName(pdfname);
 
@@ -1156,6 +1454,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         chatMessage.setType("file");
         chatMessage.setState("0");
         messageET.setText("");
+        chatMessage.setChecked(false);
         displayMessage(chatMessage);
 
 
@@ -1166,7 +1465,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
             //"file:///storage/emulated/0/memo/1640514470604.3gp"
             final byte[] inputData = getBytes(iStream);
 
-            VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_file_URL,
+            VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, AllConstants.upload_file_URL,
                     new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
@@ -1175,25 +1474,40 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                             try {
                                 JSONObject jsonObject = new JSONObject(new String(response.data));
 
-                                String text = "";
-                                String type = "";
-                                String state = "";
-                                String senderId = "";
-                                String reciverId = "";
-                                String id = "";
+//                                String text = "";
+//                                String type = "";
+//                                String state = "";
+//                                String senderId = "";
+//                                String reciverId = "";
+//                                String id = "";
+//
+//                                    /// JSONObject jsonObject= (JSONObject) messageJson.get("data");
+//                                    text = jsonObject.getString("message");
+//                                    type = jsonObject.getString("message_type");
+//                                    state = jsonObject.getString("state");
+//                                    senderId = jsonObject.getString("sender_id");
+//                                    id = jsonObject.getString("id");
+//
+//                                    reciverId = jsonObject.getString("reciver_id");
+//                                    System.out.println(text+type+state+senderId+reciverId+id);
+////                                    jsonObject.put("file name",pdfname );
+//
+//                                newMeesage(jsonObject);
+                                JSONObject sendObject = new JSONObject();
 
-                                    /// JSONObject jsonObject= (JSONObject) messageJson.get("data");
-                                    text = jsonObject.getString("message");
-                                    type = jsonObject.getString("message_type");
-                                    state = jsonObject.getString("state");
-                                    senderId = jsonObject.getString("sender_id");
-                                    id = jsonObject.getString("id");
+                                sendObject.put("sender_id", jsonObject.getString("sender_id"));
+                                sendObject.put("reciver_id", jsonObject.getString("reciver_id"));
+                                sendObject.put("message", jsonObject.getString("message"));
+                                sendObject.put("message_type", jsonObject.getString("message_type"));
+                                sendObject.put("state", jsonObject.getString("state"));
+                                sendObject.put("message_id",message_id);
+                                sendObject.put("chat_id",jsonObject.getString("chat_id"));
 
-                                    reciverId = jsonObject.getString("reciver_id");
-                                    System.out.println(text+type+state+senderId+reciverId+id);
-//                                    jsonObject.put("file name",pdfname );
+                                sendObject.put("orginalName",jsonObject.getString("orginalName"));
+                                sendObject.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
 
-                                newMeesage(jsonObject);
+
+                                newMeesage(sendObject);
 
 
 
@@ -1233,7 +1547,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                 protected Map<String, DataPart> getByteData() {
                     Map<String, DataPart> params = new HashMap<>();
 
-                    params.put("audios", new DataPart(pdfname, inputData));
+                    params.put("files", new DataPart(pdfname, inputData));
 
                     return params;
                 }
@@ -1256,10 +1570,13 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
 
     }
+    ///// for upload voice
     private void uploadVoice(final String voiceName, Uri voicedPath) {
+        String message_id =  System.currentTimeMillis()+"_"+user_id;
+
 
         ChatMessage chatMessage = new ChatMessage();
-        chatMessage.setId("122");//dummy
+        chatMessage.setId(message_id);//dummy
         chatMessage.setMessage(voicedPath.toString());
         chatMessage.setFileName(voiceName);
 
@@ -1267,6 +1584,8 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         chatMessage.setMe(true);
         chatMessage.setType("voice");
         chatMessage.setState("0");
+        chatMessage.setChecked(false);
+
         messageET.setText("");
         displayMessage(chatMessage);
 
@@ -1277,7 +1596,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
             iStream = getContentResolver().openInputStream(voicedPath);
             final byte[] inputData = getBytes(iStream);
 
-            VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, upload_Voice_URL,
+            VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, AllConstants.upload_Voice_URL,
                     new Response.Listener<NetworkResponse>() {
                         @Override
                         public void onResponse(NetworkResponse response) {
@@ -1285,26 +1604,22 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                             rQueue.getCache().clear();
                             try {
                                 JSONObject jsonObject = new JSONObject(new String(response.data));
+                                JSONObject sendObject = new JSONObject();
 
-                                String text = "";
-                                String type = "";
-                                String state = "";
-                                String senderId = "";
-                                String reciverId = "";
-                                String id = "";
+                                sendObject.put("sender_id", jsonObject.getString("sender_id"));
+                                sendObject.put("reciver_id", jsonObject.getString("reciver_id"));
+                                sendObject.put("message", jsonObject.getString("message"));
+                                sendObject.put("message_type", jsonObject.getString("message_type"));
+                                sendObject.put("state", jsonObject.getString("state"));
+                                sendObject.put("message_id",message_id);
+                                sendObject.put("orginalName",jsonObject.getString("orginalName"));
+                                sendObject.put("chat_id",jsonObject.getString("chat_id"));
 
-                                /// JSONObject jsonObject= (JSONObject) messageJson.get("data");
-                                text = jsonObject.getString("message");
-                                type = jsonObject.getString("message_type");
-                                state = jsonObject.getString("state");
-                                senderId = jsonObject.getString("sender_id");
-                                id = jsonObject.getString("id");
+                                sendObject.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
 
-                                reciverId = jsonObject.getString("reciver_id");
-                                System.out.println(text + type + state + senderId + reciverId + id);
-//                                    jsonObject.put("file name",pdfname );
 
-                                newMeesage(jsonObject);
+                                newMeesage(sendObject);
+
 
 
                             } catch (JSONException e) {
@@ -1364,6 +1679,118 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+    }
+
+    //// for upload video
+    private void uploadVideo(final String pdfname, Uri pdffile) {
+        String message_id =  System.currentTimeMillis()+"_"+user_id;
+
+        ChatMessage chatMessage = new ChatMessage();
+        chatMessage.setId(message_id);//dummy
+        chatMessage.setMessage(pdffile.toString());
+        chatMessage.setFileName(pdfname);
+
+        chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+        chatMessage.setMe(true);
+        chatMessage.setType("video");
+        chatMessage.setState("0");
+        messageET.setText("");
+        chatMessage.setChecked(false);
+        displayMessage(chatMessage);
+
+
+        InputStream iStream = null;
+        try {
+
+            iStream = getContentResolver().openInputStream(pdffile);
+            //"file:///storage/emulated/0/memo/1640514470604.3gp"
+            final byte[] inputData = getBytes(iStream);
+
+            VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, AllConstants.upload_video_URL,
+                    new Response.Listener<NetworkResponse>() {
+                        @Override
+                        public void onResponse(NetworkResponse response) {
+                            rQueue.getCache().clear();
+                            try {
+                                JSONObject jsonObject = new JSONObject(new String(response.data));
+
+                                JSONObject sendObject = new JSONObject();
+
+                                sendObject.put("sender_id", jsonObject.getString("sender_id"));
+                                sendObject.put("reciver_id", jsonObject.getString("reciver_id"));
+                                sendObject.put("message", jsonObject.getString("message"));
+                                sendObject.put("message_type", jsonObject.getString("message_type"));
+                                sendObject.put("state", jsonObject.getString("state"));
+                                sendObject.put("message_id",message_id);
+                                sendObject.put("chat_id",jsonObject.getString("chat_id"));
+
+                                sendObject.put("orginalName",jsonObject.getString("orginalName"));
+                                sendObject.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
+
+
+                                newMeesage(sendObject);
+
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }) {
+
+                /*
+                 * If you want to add more parameters with the image
+                 * you can do it here
+                 * here we have only one parameter with the image
+                 * which is tags
+                 * */
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("sender_id",user_id);
+                    params.put("reciver_id", anthor_user_id);
+                    params.put("message_type","video");
+                    params.put("state","0");
+                    params.put("orginalName",pdfname);
+                    params.put("dateTime", DateFormat.getDateTimeInstance().format(new Date()));
+                    return params;
+                }
+
+                /*
+                 *pass files using below method
+                 * */
+                @Override
+                protected Map<String, DataPart> getByteData() {
+                    Map<String, DataPart> params = new HashMap<>();
+
+                    params.put("vedios", new DataPart(pdfname, inputData));
+
+                    return params;
+                }
+            };
+
+
+            volleyMultipartRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+            rQueue = Volley.newRequestQueue(ConversationActivity.this);
+            rQueue.add(volleyMultipartRequest);
+
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
         public byte[] getBytes(InputStream inputStream) throws IOException {
@@ -1499,7 +1926,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     }
    ///// on click on download
     @Override
-    public void onDownload(int position, ChatMessage chatMessage,boolean myMessage) {
+    public void downloadFile(int position, ChatMessage chatMessage, boolean myMessage) {
         File pdfFile;
         System.out.println(chatMessage.message+"onDownload");
 
@@ -1522,7 +1949,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                 if (!pdfFile.exists()) {
 
 //            new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
-                    new DownloadFile().execute("http://192.168.1.9:8080/src/yawar_chat/uploads/files/" + chatMessage.getMessage().toString(), chatMessage.getFileName(),"send");
+                    new DownloadFile().execute(AllConstants.download_url+"files/" + chatMessage.getMessage().toString(), chatMessage.getFileName(),"send");
                 } else {
                     Log.v(TAG, "File already download ");
 
@@ -1536,7 +1963,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                 if (!pdfFile.exists()) {
 
 //            new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
-                    new DownloadFile().execute("http://192.168.1.9:8080/src/yawar_chat/uploads/files/" + chatMessage.getMessage().toString(), chatMessage.getMessage().toString(),"recive");
+                    new DownloadFile().execute(AllConstants.download_url+"files/" + chatMessage.getMessage().toString(), chatMessage.getMessage().toString(),"recive");
                 } else {
                     Log.v(TAG, "File already download ");
 
@@ -1550,7 +1977,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
     }
 
     @Override
-    public void Download(int position, ChatMessage chatMessage, boolean myMessage) {
+    public void downloadVoice(int position, ChatMessage chatMessage, boolean myMessage) {
         File audioFile;
         System.out.println(chatMessage.message+"onDownload");
 
@@ -1575,7 +2002,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
 //            new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
                     //new DownloadFile().execute("http://192.168.1.9:8080/src/yawar_chat/uploads/files/" + chatMessage.getMessage().toString(), chatMessage.getFileName(),"send");
-                    new DownloadFile().execute("http://192.168.1.13:8080/src/yawar_chat/uploads/audio/" + chatMessage.getMessage().toString(), chatMessage.getFileName(),"send/voiceRecord");
+                    new DownloadFile().execute(AllConstants.download_url+"audio/" + chatMessage.getMessage().toString(), chatMessage.getFileName(),"send/voiceRecord");
 
                 } else {
                     MediaPlayer mediaPlayer = MediaPlayer.create(this, Uri.parse(audioFile.getAbsolutePath()));
@@ -1593,7 +2020,7 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
                 if (!audioFile.exists()) {
 
 //            new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
-                    new DownloadFile().execute("http://192.168.1.13:8080/src/yawar_chat/uploads/audio/" + chatMessage.getMessage().toString(), chatMessage.getMessage().toString(),"recive/voiceRecord");
+                    new DownloadFile().execute(AllConstants.download_url+"audio/" + chatMessage.getMessage().toString(), chatMessage.getMessage().toString(),"recive/voiceRecord");
                 } else {
                     Log.v(TAG, "File already download ");
 
@@ -1607,6 +2034,145 @@ public class ConversationActivity extends AppCompatActivity implements ChatAdapt
 
     }
 
+    @Override
+    public void downloadVideo(int position, ChatMessage chatMessage, boolean myMessage) {
+        File videoFile;
+        System.out.println(chatMessage.message+"onDownload");
+
+        Log.v(TAG, "download() Method invoked ");
+
+        if (!hasPermissions(ConversationActivity.this, PERMISSIONS)) {
+
+            Log.v(TAG, "download() Method DON'T HAVE PERMISSIONS ");
+
+            Toast t = Toast.makeText(getApplicationContext(), "You don't have write access !", Toast.LENGTH_LONG);
+            t.show();
+
+        } else {
+
+            Log.v(TAG, "download() Method HAVE PERMISSIONS ");
+            if(myMessage) {
+                File d = Environment.getExternalStoragePublicDirectory("memo/send");
+
+                videoFile = new File(d, chatMessage.getFileName());
+                if (!videoFile.exists()) {
+
+                    new DownloadFile().execute(AllConstants.download_url+"video/" + chatMessage.getMessage().toString(), chatMessage.getFileName(),"send/video");
+                } else {
+                    Log.v(TAG, "File already download ");
+
+                }
+            }
+            else {
+
+                File d = Environment.getExternalStoragePublicDirectory("memo/recive");
+
+                videoFile = new File(d, chatMessage.getMessage().toString());
+                if (!videoFile.exists()) {
+
+//            new DownloadFile().execute("http://maven.apache.org/maven-1.x/maven.pdf", "maven.pdf");
+                    new DownloadFile().execute(AllConstants.download_url+"video/" + chatMessage.getMessage().toString(), chatMessage.getMessage().toString(),"recive/video");
+                } else {
+                    Log.v(TAG, "File already download ");
+
+                }
+            }
+
+        }
+
+        Log.v(TAG, "download() Method completed ");
+
+
+    }
+
+    @Override
+    public void onLongClick(int position, ChatMessage chatMessage, boolean isChecked) {
+        System.out.println(isChecked);
+        personInformationLiner.setVisibility(View.GONE);
+        toolsLiner.setVisibility(View.VISIBLE);
+
+        if(isChecked){
+            System.out.println(chatMessage.getMessage()+"getMessage");
+            selectedMessage.add(chatMessage);
+            deleteMessage.add(chatMessage.getId());
+        }
+        else {
+            selectedMessage.remove(chatMessage);
+            deleteMessage.remove(chatMessage.getId());
+
+            if(selectedMessage.size()<1){
+                personInformationLiner.setVisibility(View.VISIBLE);
+                toolsLiner.setVisibility(View.GONE);
+            }
+        }
+
+    }
+
+    @Override
+    public void playVideo(Uri path) {
+        Bundle bundle = new Bundle();
+        bundle.putString("path",path.toString());
+        Intent intent = new Intent(ConversationActivity.this,VideoActivity.class);
+        intent.putExtras(bundle);
+
+        startActivity(intent);
+
+//        AlertDialog.Builder mBuilder = new AlertDialog.Builder(view.getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+//
+//        View mView = LayoutInflater.from(view.getContext()).inflate(R.layout.dialog_video_player, null);
+//        VideoView videoView;
+//        videoView = mView.findViewById(R.id.simpleVideoView);
+//        videoView.requestFocus();
+//
+////        if (mediaControls == null) {
+////            // create an object of media controller class
+////            mediaControls = new MediaController(ConversationActivity.this);
+////            mediaControls.setAnchorView(videoView);
+////        }
+//        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+//            @Override
+//            public void onPrepared(MediaPlayer mediaPlayer) {
+//                mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+//                    @Override
+//                    public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+//                        /*
+//                         * add media controller
+//                         */
+//                        mediaControls = new MediaController(ConversationActivity.this);
+//                        videoView.setMediaController(mediaControls);
+//                        /*
+//                         * and set its position on screen
+//                         */
+//                        mediaControls.setAnchorView(videoView);
+//                    }
+//                });
+//            }
+//        });
+////        mediaControls = new MediaController(this);
+//        videoView.setMediaController(mediaControls);
+////        mediaControls.setAnchorView(videoView);
+//        videoView.setVideoURI(path);
+////                // start a video
+//        videoView.start();
+//        videoView.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//            @Override
+//            public void onCompletion(MediaPlayer mp) {
+//                 Toast.makeText(getApplicationContext(), "Thank You...!!!", Toast.LENGTH_LONG).show(); // display a toast when an video is completed
+//            }
+//        });
+//        videoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+//            @Override
+//            public boolean onError(MediaPlayer mp, int what, int extra) {
+//                  Toast.makeText(getApplicationContext(), "Oops An Error Occur While Playing Video...!!!", Toast.LENGTH_LONG).show(); // display a toast when an error is occured while playing an video
+//                return false;
+//            }
+//        });
+//        mBuilder.setView(mView);
+//        AlertDialog mDialog = mBuilder.create();
+//        mDialog.show();
+
+
+    }
 
     private class DownloadFile extends AsyncTask<String, Void, Void> {
 

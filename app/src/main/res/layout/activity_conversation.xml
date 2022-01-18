@@ -23,8 +23,10 @@
             >
 
             <LinearLayout
+                android:id="@+id/person_information_liner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="visible"
                 android:orientation="horizontal">
             <ImageView
                 android:layout_width="wrap_content"
@@ -104,6 +106,24 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="18dp"
                     app:searchIcon="@android:drawable/ic_menu_search" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/tools_liner_layout"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:layout_height="wrap_content">
+                <ImageButton
+                    android:id="@+id/image_button_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+
+                    android:src="@drawable/ic_delete">
+
+
+                </ImageButton>
+
             </LinearLayout>
 
 

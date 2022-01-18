@@ -9,10 +9,11 @@ public class ChatRoomModel {
     public boolean isChecked;
     public  String numberMessage;
     public String  chatId;
+    public  String state;
 
 
 
-    public ChatRoomModel(String name,String senderId, String reciverId, String lastMessage, String image, boolean isChecked, String numberMessage,String chatId) {
+    public ChatRoomModel(String name,String senderId, String reciverId, String lastMessage, String image, boolean isChecked, String numberMessage,String chatId,String state) {
 
         this.name = name;
         this.senderId = senderId;
@@ -22,6 +23,7 @@ public class ChatRoomModel {
         this.isChecked = isChecked;
         this.numberMessage= numberMessage;
         this.chatId = chatId;
+        this.state = state;
     }
 
     public String getName() {
@@ -87,5 +89,13 @@ public class ChatRoomModel {
 
     public void setChatId(String chatId) {
         this.chatId = chatId;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 }

@@ -32,6 +32,7 @@ import com.tsuryo.swipeablerv.SwipeLeftRightCallback;
 import com.tsuryo.swipeablerv.SwipeableRecyclerView;
 import com.yawar.memo.Api.ClassSharedPreferences;
 import com.yawar.memo.Api.ServerApi;
+import com.yawar.memo.constant.AllConstants;
 import com.yawar.memo.model.UserModel;
 import com.yawar.memo.service.SocketIOService;
 import com.yawar.memo.utils.Globale;
@@ -145,7 +146,7 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
                         type = message.getString("message_type");
                         state = message.getString("state");
                         senderId = message.getString("sender_id");
-                        id = message.getString("id");
+                        id = message.getString("message_id");
                         reciverId = message.getString("reciver_id");
                         chatId =  message.getString("chat_id");
 //                        fileName = message.getString("orginalName");
@@ -154,34 +155,18 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-            myBase.getObserver().setLastMessage(text,chatId);
+
+                if(!state.equals("3")){
+            myBase.getObserver().setLastMessage(text,chatId);}
+            }
 
 
-        }
+
 
 
     };
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        LocalBroadcastManager.getInstance(this).registerReceiver(onSocketConnect, new IntentFilter(ON_SOCKET_CONNECTION));
-////        if (adapterRoom != null) adapterRoom.notifyDataSetChanged();
-//    }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        LocalBroadcastManager.getInstance(this).unregisterReceiver(onSocketConnect);
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-////        GetData();
-//
-//
-//    }
     public static ChatRoomFragment newInstance(String param1, String param2) {
         ChatRoomFragment fragment = new ChatRoomFragment();
         Bundle args = new Bundle();
@@ -195,9 +180,6 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        data = fill_with_data();
-       // System.out.println(data.get(1).name);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -210,32 +192,6 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat_room, container, false);
-
-//       ChatRoomAdapter adapter = new ChatRoomAdapter(data,getApp());
-
-////////////////////////////////
-//        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-////        ListItemClickListener listener = (view1, position) -> {
-////            Toast.makeText(getContext(), "Position " + position, Toast.LENGTH_SHORT).show();
-////            Intent intent = new Intent(view.getContext(), ConversationActivity.class);
-////
-////            startActivity(intent);
-////        };
-//       itemAdapter = new ChatRoomAdapter(data ,  getActivity());
-//       // itemAdapter = new ChatRoomAdapter(data , this);
-//
-//
-////        recyclerView.setHasFixedSize(true);
-////        recyclerView.setAdapter(itemAdapter);
-//        LinearLayoutManager linearLayoutManager =new LinearLayoutManager(getActivity());
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        recyclerView.setAdapter(itemAdapter);
-
-/////////////////////////
-
-
-
         Intent service = new Intent(getContext(), SocketIOService.class);
        getActivity(). startService(service);
         connectSocket();
@@ -250,13 +206,12 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
         String lan = classSharedPreferences.getLocale();
         myId = classSharedPreferences.getUser().getUserId();
 //        System.out.println("myId"+myId);
-        globale = new Globale();
-        Locale locale = new Locale(lan);
-        Locale.setDefault(locale);
-        Resources resources = this.getResources();
-        Configuration config = resources.getConfiguration();
-        config.setLocale(locale);
-        resources.updateConfiguration(config, resources.getDisplayMetrics());
+//        Locale locale = new Locale(lan);
+//        Locale.setDefault(locale);
+//        Resources resources = this.getResources();
+//        Configuration config = resources.getConfiguration();
+//        config.setLocale(locale);
+//        resources.updateConfiguration(config, resources.getDisplayMetrics());
         myBase = (BaseApp) getActivity().getApplication();
         myBase.getObserver().addObserver(this);
         System.out.println("myBase.getObserver().getChatRoomModelList();"+postList.size());
@@ -300,8 +255,9 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
             linerArchived.setVisibility(View.VISIBLE);
 
         }
-
-        postList = myBase.getObserver().getChatRoomModelList();
+          for(ChatRoomModel chatRoomModel:myBase.getObserver().getChatRoomModelList()){
+              if(chatRoomModel.getState().equals("0"))
+        postList.add(chatRoomModel);}
 
         itemAdapter = new ChatRoomAdapter(postList, this);
         recyclerView.setAdapter(itemAdapter);
@@ -318,7 +274,7 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
             public void onSwipedRight(int position) {
                 System.out.println(position);
                 addToArchived(postList.get(position));
-                myBase.getObserver().deleteChatRoom(position);
+//                myBase.getObserver().deleteChatRoom(position);
                 myBase.getObserver().setArchived(true);
 
                 linerArchived.setVisibility(View.VISIBLE);
@@ -480,7 +436,7 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
         System.out.println(chatRoomModel.lastMessage);
         final ProgressDialog progressDialo = new ProgressDialog(getContext());
         // url to post our data
-        String url = "http://192.168.1.8:8000/archivechat";
+//        String url = "http://192.168.1.8:8000/archivechat";
         progressDialo.setMessage("Uploading, please wait...");
         progressDialo.show();
         // creating a new variable for our request queue
@@ -488,11 +444,13 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
         // on below line we are calling a string
         // request method to post the data to our API
         // in this we are calling a post method.
-        StringRequest request = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
+        StringRequest request = new StringRequest(Request.Method.POST, AllConstants.add_to_archived_url, new com.android.volley.Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 progressDialo.dismiss();
                 System.out.println("Data added to API+"+response);
+                myBase.getObserver().setState(chatRoomModel.chatId,"1");
+
 
             }
         }, new com.android.volley.Response.ErrorListener() {
@@ -573,7 +531,11 @@ public class ChatRoomFragment extends Fragment implements ChatRoomAdapter.Callba
     @Override
     public void update(Observable observable, Object o) {
         System.out.println("mmmmmmmmmmmmm");
-        postList=myBase.getObserver().getChatRoomModelList();
+        postList.clear();
+        for(ChatRoomModel chatRoomModel:myBase.getObserver().getChatRoomModelList()){
+            if(chatRoomModel.getState().equals("0"))
+                postList.add(chatRoomModel);}
+//        postList=myBase.getObserver().getChatRoomModelList();
         isArchived=myBase.getObserver().isArchived();
         if(isArchived){
             linerArchived.setVisibility(View.VISIBLE);

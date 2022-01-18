@@ -10,6 +10,7 @@ import com.yawar.memo.R;
 import com.yawar.memo.fragment.ChatRoomFragment;
 import com.yawar.memo.fragment.ProfileFragment;
 import com.yawar.memo.fragment.SearchFragment;
+import com.yawar.memo.fragment.StoriesFragment;
 
 public class DashBord extends AppCompatActivity  {
 
@@ -41,6 +42,8 @@ public class DashBord extends AppCompatActivity  {
                     case R.id.searchSn:
                         fragment = new SearchFragment();
                         break;
+                    case  R.id .calls:
+                        fragment = new StoriesFragment();
                 }
 
                 if (fragment != null)

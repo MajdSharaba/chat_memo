@@ -177,6 +177,7 @@ public class ContactNumberActivity extends AppCompatActivity {
                 Cursor phoneCursor = getContentResolver().query(uriPhone, null ,selection , new String[]{id},null);
                 if(phoneCursor.moveToNext()){
                     String number = phoneCursor.getString(phoneCursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    System.out.println(number+"this is the number");
                     ContactModel model = new ContactModel();
                     model.setName(name);
                     model.setNumber(number);
